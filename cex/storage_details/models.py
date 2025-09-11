@@ -1,31 +1,17 @@
 from django.db import models
+from mptt.fields import TreeForeignKey
+from mptt.models import MPTTModel
+from django.urls import reverse
+from warehouse_materials.models import AllMaterials, ShapeMaterials
 
 # Create your models here.
 def image_directory_path(instance, filename):
-    return '{0}/img/{1}'.format(instance.EAM, filename)
+    return '{0}/img/{1}'.format(instance.id, filename)
 
 
-class AllMaterials(models.Model):
-    stamp = models.CharField(max_length=50, verbose_name='Марка материала', null=True, blank=True)
 
-    def __str__(self):
-        return f"{self.stamp}"
 
-    class Meta:
-        db_table = "MaterialsAll"
-        verbose_name_plural = 'Марка материала'
-
-class ShapeMaterials(models.Model):
-    shape = models.CharField(max_length=50, verbose_name='Форма материала', primary_key=True)
-
-    def __str__(self):
-        return f"{self.shape}"
-
-    class Meta:
-        db_table = "MaterialsShape"
-        verbose_name_plural = 'Формы материала'
-
-class Detail(models.Model):
+class Detail(MPTTModel):
     DIVISION = (
         ('БФО ', 'БФО'),
         ('Варочный ', 'Варочный'),
@@ -33,6 +19,9 @@ class Detail(models.Model):
         ('Солодовня ', 'Солодовня'),
         ('Котельня ', 'Котельня'),
     )
+    parent = TreeForeignKey('self', on_delete=models.PROTECT, null=True, blank=True, related_name='children',
+                            db_index=True, verbose_name='Родительская категория')
+    slug = models.SlugField()
     EAM = (models.CharField
            (max_length=20))
     name = (models.CharField
@@ -71,7 +60,52 @@ class Detail(models.Model):
     def __str__(self):
         return f"{self.EAM} - {self.name}"
 
+    class MPTTMeta:
+        order_insertion_by = ['EAM']
+
     class Meta:
+        unique_together = [['parent', 'slug']]
         db_table = "Detail"
         verbose_name_plural = 'Детали'
+
+    def get_absolute_url(self):
+        return reverse('post-by-category', args=[str(self.slug)])
+
+    def __str__(self):
+        return self.EAM
+
+class Post(models.Model):
+    title = models.CharField(max_length=100, verbose_name='Название')
+    slug = models.SlugField(max_length=150)
+    category = TreeForeignKey('Category', on_delete=models.PROTECT, related_name='posts', verbose_name='Категория')
+    content = models.TextField(verbose_name='Содержание')
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Запись'
+        verbose_name_plural = 'Записи'
+
+
+class Category(MPTTModel):
+    title = models.CharField(max_length=50, unique=True, verbose_name='Название')
+    parent = TreeForeignKey('self', on_delete=models.PROTECT, null=True, blank=True, related_name='children',
+                            db_index=True, verbose_name='Родительская категория')
+    slug = models.SlugField()
+
+    class MPTTMeta:
+        order_insertion_by = ['title']
+
+    class Meta:
+        unique_together = [['parent', 'slug']]
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+
+    def get_absolute_url(self):
+        return reverse('post-by-category', args=[str(self.slug)])
+
+    def __str__(self):
+        return self.title
+
 
