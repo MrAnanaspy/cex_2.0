@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-0y5ty7datt7ga*vp%b0d149ky45$+4h8av4f6pqpx4&3m#v_%g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.130', 'localhost', '127.0.0.1']
+
+CSRF_TRUSTED_ORIGINS = ['https://*.localhost', 'https://*.192.168.1.130']
 
 
 # Application definition
@@ -38,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'storage_details',
+    'mptt',
+    'warehouse_materials',
+    'economy',
 ]
 
 MIDDLEWARE = [
@@ -74,11 +79,16 @@ WSGI_APPLICATION = 'cex.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+	'default': {
+		'ENGINE': 'django.db.backends.postgresql',
+		'NAME': 'cex',
+		'USER': 'postgres',
+		'PASSWORD': 'Wns-wA2-MFW-Hs8',
+		'HOST':'localhost',
+		'PORT':'5432',
+	}
 }
+
 
 
 # Password validation
