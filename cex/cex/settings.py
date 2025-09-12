@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'mptt',
     'warehouse_materials',
     'economy',
+    'work_planning',
 ]
 
 MIDDLEWARE = [
