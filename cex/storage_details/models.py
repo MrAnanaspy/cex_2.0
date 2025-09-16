@@ -9,8 +9,6 @@ def image_directory_path(instance, filename):
     return '{0}/img/{1}'.format(instance.id, filename)
 
 
-
-
 class Detail(MPTTModel):
     DIVISION = (
         ('БФО ', 'БФО'),
@@ -22,10 +20,8 @@ class Detail(MPTTModel):
     parent = TreeForeignKey('self', on_delete=models.PROTECT, null=True, blank=True, related_name='children',
                             db_index=True, verbose_name='Родительская категория')
     slug = models.SlugField()
-    EAM = (models.CharField
-           (max_length=20))
-    name = (models.CharField
-            (max_length=100, verbose_name='Название', null=True, blank=True))
+    EAM = (models.CharField(max_length=20, null=True, blank=True))
+    name = (models.CharField(max_length=100, verbose_name='Название', null=True, blank=True))
     division = models.CharField(max_length=50, choices=DIVISION, verbose_name='Подразделение', null=True,
                                            blank=True)
     mater = models.ForeignKey(AllMaterials, on_delete=models.CASCADE, verbose_name='Марка материала', null=True, blank=True)
