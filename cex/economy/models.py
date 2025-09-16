@@ -51,12 +51,11 @@ class WAP (models.Model):
         verbose_name_plural = 'СВЦ'
 
 class PriceArchive (models.Model):
-    application = models.ForeignKey(Analog, on_delete=models.CASCADE, verbose_name='Заявка')
-    wap = models.ForeignKey(Analog, on_delete=models.CASCADE, verbose_name='СВЦ')
+    wap = models.ForeignKey(WAP, on_delete=models.CASCADE, verbose_name='СВЦ')
     comment = models.TextField(verbose_name='Комментарий', null=True, blank=True)
 
     def __str__(self):
-        return f"{self.application}"
+        return f"{self.wap}"
 
     class Meta:
         db_table = "PriceArchive"
