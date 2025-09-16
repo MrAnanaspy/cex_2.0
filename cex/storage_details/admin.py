@@ -3,7 +3,7 @@ from django.utils.html import format_html
 from django.dispatch import receiver
 from mptt.admin import MPTTModelAdmin
 
-from .models import Detail, Post, Category
+from .models import Detail
 
 
 # Register your models here.
@@ -18,15 +18,3 @@ class DetailAdmin(MPTTModelAdmin):
     image_tag.short_description = 'Фото/Рендер'
     image_tag.allow_tags = True
 '''
-class PostAdmin(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ("title",)}
-
-
-admin.site.register(Post, PostAdmin)
-
-
-class CategoryAdmin(MPTTModelAdmin):
-    prepopulated_fields = {"slug": ("title",)}
-
-
-admin.site.register(Category, CategoryAdmin)
