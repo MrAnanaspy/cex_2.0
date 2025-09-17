@@ -9,17 +9,15 @@ def image_directory_path(instance, filename):
     return '{0}/img/{1}'.format(instance.id, filename)
 
 
-class Detail(MPTTModel):
+class Detail(models.Model):
     DIVISION = (
         ('БФО ', 'БФО'),
         ('Варочный ', 'Варочный'),
         ('Розлив ', 'Розлив'),
         ('Солодовня ', 'Солодовня'),
         ('Котельня ', 'Котельня'),
+        ('Другое ', 'Другое'),
     )
-    parent = TreeForeignKey('self', on_delete=models.PROTECT, null=True, blank=True, related_name='children',
-                            db_index=True, verbose_name='Родительская категория')
-    slug = models.SlugField()
     EAM = (models.CharField(max_length=20, null=True, blank=True))
     name = (models.CharField(max_length=100, verbose_name='Название', null=True, blank=True))
     division = models.CharField(max_length=50, choices=DIVISION, verbose_name='Подразделение', null=True,
@@ -56,18 +54,78 @@ class Detail(MPTTModel):
     def __str__(self):
         return f"{self.EAM} - {self.name}"
 
-    class MPTTMeta:
-        order_insertion_by = ['EAM']
 
     class Meta:
-        unique_together = [['parent', 'slug']]
         db_table = "Detail"
         verbose_name_plural = 'Детали'
 
-    def get_absolute_url(self):
-        return reverse('post-by-category', args=[str(self.slug)])
+
+class MultiplierDetail(models.Model):
+    multiplier = models.IntegerField(verbose_name='Множитель', default=1)
+    detail = models.ForeignKey(Detail, on_delete=models.CASCADE, verbose_name='Задача', null=True, blank=True)
 
     def __str__(self):
-        return self.EAM
+        return f"{self.multiplier} - {self.detail}"
+
+    class Meta:
+        db_table = "MultiplierDetail"
+        verbose_name_plural = 'Множитель детали'
 
 
+class MultiplierStandardProducts(models.Model):
+    multiplier = models.IntegerField(verbose_name='Множитель', default=1)
+    name = models.CharField(max_length=100, verbose_name='Наименование', null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.multiplier} - {self.name}"
+
+    class Meta:
+        db_table = "MultiplierStandardProducts"
+        verbose_name_plural = 'Множитель стандартных деталей'
+
+class MultiplierPurchasedPproducts(models.Model):
+    multiplier = models.IntegerField(verbose_name='Множитель', default=1)
+    name = models.CharField(max_length=100, verbose_name='Наименование', null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.multiplier} - {self.name}"
+
+    class Meta:
+        db_table = "MultiplierPurchasedPproducts"
+        verbose_name_plural = 'Множитель заказных деталей'
+
+
+class Specification(MPTTModel):
+    DIVISION = (
+        ('БФО ', 'БФО'),
+        ('Варочный ', 'Варочный'),
+        ('Розлив ', 'Розлив'),
+        ('Солодовня ', 'Солодовня'),
+        ('Котельня ', 'Котельня'),
+        ('Другое ', 'Другое'),
+    )
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    multiplier_assembling = models.IntegerField(verbose_name='Множитель', default=1)
+    EAM = (models.CharField(max_length=20, null=True, blank=True))
+    name = (models.CharField(max_length=100, verbose_name='Название', null=True, blank=True))
+    division = models.CharField(max_length=50, choices=DIVISION, verbose_name='Подразделение', null=True, blank=True)
+    multiplier_detail = models.ForeignKey(MultiplierDetail, on_delete=models.CASCADE, verbose_name='Множитель детали', null=True, blank=True, related_name = 'multiplier')
+    multiplier_standard_products = models.ForeignKey(MultiplierStandardProducts, on_delete=models.CASCADE, verbose_name='Множитель стандартных деталей', null=True,blank=True, related_name='multiplier')
+    multiplier_purchased_products = models.ForeignKey(MultiplierPurchasedPproducts, on_delete=models.CASCADE, verbose_name='Множитель заказных деталей', null=True,blank=True, related_name='multiplier')
+    photo = (models.ImageField
+             (max_length=260, verbose_name='Ссылка на фото', upload_to=image_directory_path, null=True, blank=True))
+    build  = models.FloatField(max_length=30,
+                                        verbose_name='Время потраченное на технический контроль 1 шт (мин)', default=0)
+    packaging = models.FloatField(max_length=30,
+                                          verbose_name='Время потраченное на упаковку 1 шт (мин)', default=0)
+    comment = models.TextField(verbose_name='Комментарий', null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.EAM} - {self.name}"
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
+
+    class Meta:
+        db_table = "Specification"
+        verbose_name_plural = 'Спецификация'
