@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 class AllMaterials(models.Model):
     stamp = models.CharField(max_length=50, verbose_name='Марка материала', primary_key=True)
+    density = models.FloatField(verbose_name='Плотность материала')
 
     def __str__(self):
         return f"{self.stamp}"
@@ -27,6 +28,7 @@ class WarehouseMaterial(models.Model):
                               blank=True)
     type = models.ForeignKey(ShapeMaterials, on_delete=models.CASCADE, verbose_name='Форма материла', null=True,
                                     blank=True)
+    size = models.CharField(max_length=50, verbose_name='Размер', null=True, blank=True)
     initial_weight = models.FloatField(max_length=50, verbose_name='Материала всего, кг', null=True, blank=True)
     actual_weight = models.FloatField(max_length=50, verbose_name='Материала осталось, кг', null=True, blank=True)
     certificate = models.CharField(max_length=50, verbose_name='№ Сертификата', null=True, blank=True)
