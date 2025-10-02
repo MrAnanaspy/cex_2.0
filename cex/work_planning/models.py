@@ -1,21 +1,13 @@
-from django.contrib.auth.models import User, Group
+'''from django.contrib.auth.models import User, Group
 from django.db import models
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from storage_details.models import Detail
 from warehouse_materials.models import WarehouseMaterial, WarehouseMaterial3D
 from economy.models import PriceArchive
+from branch.models import Branch
 
 # Create your models here.
-class Branch(models.Model):
-    name = models.CharField(max_length=50, verbose_name='Филиал')
-
-    def __str__(self):
-        return f"{self.name}"
-
-    class Meta:
-        db_table = "Branch"
-        verbose_name_plural = 'Филиал'
 
 class Signature(models.Model):
     user =  models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь', null=True, blank=True)
@@ -174,7 +166,7 @@ class Application(models.Model):
         (2, 'II'),
         (3, 'III'),
     )
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name='Марка материала', null=True, blank=True, related_name = 'branch')
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name='Филиал', null=True, blank=True, related_name = 'branch')
     task = models.TextField(verbose_name='Задача к разработке', null=True, blank=True)
     quantity = models.IntegerField( verbose_name='Кол-во', default=0)
     date_create = models.DateField(verbose_name='Время создания')
@@ -200,3 +192,4 @@ class Application(models.Model):
     class Meta:
         db_table = "Application"
         verbose_name_plural = 'Заявка'
+'''

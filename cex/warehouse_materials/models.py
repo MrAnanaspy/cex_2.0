@@ -1,15 +1,38 @@
 from django.db import models
+from django.db.models import TextField
+from mptt.fields import TreeForeignKey
+from mptt.models import MPTTModel
+
 
 # Create your models here.
+class MaterialCategory(MPTTModel):
+    parent = TreeForeignKey('self', on_delete=models.PROTECT, null=True, blank=True, related_name='children',
+                            db_index=True, verbose_name='Родительская категория')
+    slug = models.SlugField()
+    name = models.CharField(max_length=50, verbose_name='Категория материала', primary_key=True)
+
+
+    def __str__(self):
+        return f"{self.name}"
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
+
+    class Meta:
+        db_table = "MaterialCategory"
+        verbose_name_plural = 'Категория материала'
+
 class AllMaterials(models.Model):
     stamp = models.CharField(max_length=50, verbose_name='Марка материала', primary_key=True)
-    density = models.FloatField(verbose_name='Плотность материала')
+    type = models.CharField(max_length=50, verbose_name='Марка материала')
+    density = models.FloatField(verbose_name='Плотность материала', default=0)
+    description = TextField(verbose_name='Описание', null=True, blank=True)
 
     def __str__(self):
         return f"{self.stamp}"
 
     class Meta:
-        db_table = "MaterialsAll"
+        db_table = "AllMaterials"
         verbose_name_plural = 'Марка материала'
 
 class ShapeMaterials(models.Model):
@@ -34,6 +57,8 @@ class WarehouseMaterial(models.Model):
     certificate = models.CharField(max_length=50, verbose_name='№ Сертификата', null=True, blank=True)
     melting  = models.CharField(max_length=50, verbose_name='№ Плавки', null=True, blank=True)
     batch = models.CharField(max_length=50, verbose_name='№ Партии', null=True, blank=True)
+    '''branch = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name='Филиал', null=True,
+                              blank=True)'''
 
     def __str__(self):
         return f"{self.stamp}"

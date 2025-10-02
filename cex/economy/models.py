@@ -1,4 +1,4 @@
-from django.db import models
+'''from django.db import models
 
 # Create your models here.
 class Expenses(models.Model):
@@ -59,4 +59,4 @@ class PriceArchive (models.Model):
 
     class Meta:
         db_table = "PriceArchive"
-        verbose_name_plural = 'Архиф цен'
+        verbose_name_plural = 'Архиф цен' '''

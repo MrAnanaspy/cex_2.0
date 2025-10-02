@@ -4,14 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b560c537-39ba-4148-baa8-b68af32f0e9f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/cex2.0.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cex/storage_details/templates/storage_details/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cex/storage_details/urls.py" afterDir="false" />
+    <list default="true" id="b560c537-39ba-4148-baa8-b68af32f0e9f" name="Changes" comment="Изменение склада материала">
+      <change afterPath="$PROJECT_DIR$/cex/warehouse_materials/templates/material_storage.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cex/warehouse_materials/templates/Формы материала.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cex/warehouse_materials/templates/создать категорию.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cex/warehouse_materials/templates/создать марку.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cex/warehouse_materials/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/cex/warehouse_materials/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cex/warehouse_materials/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/cex/warehouse_materials/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cex/work_planning/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/cex/work_planning/models.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,23 +30,23 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="30M0bSba4tQfVpEG3WbArIpzcHh" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -61,6 +62,93 @@
       <option name="presentableId" value="Default" />
       <updated>1753422205859</updated>
     </task>
+    <task id="LOCAL-00001" summary="Немного изменил модель экономии">
+      <option name="closed" value="true" />
+      <created>1758016736761</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1758016736761</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Немного изменил модель базы деталей">
+      <option name="closed" value="true" />
+      <created>1758016761298</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1758016761299</updated>
+    </task>
+    <task id="LOCAL-00003" summary="создал модели планирования работ">
+      <option name="closed" value="true" />
+      <created>1758016789881</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1758016789881</updated>
+    </task>
+    <task id="LOCAL-00004" summary="создал вывод в админ панель модели планирования работ">
+      <option name="closed" value="true" />
+      <created>1758017808907</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1758017808907</updated>
+    </task>
+    <task id="LOCAL-00005" summary="удалил тестовые модели">
+      <option name="closed" value="true" />
+      <created>1758018038007</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1758018038007</updated>
+    </task>
+    <task id="LOCAL-00006" summary="редактирование имен">
+      <option name="closed" value="true" />
+      <created>1758090992124</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1758090992124</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Добовление спецификации и пересмотр релезации сборок в базе">
+      <option name="closed" value="true" />
+      <created>1758104040664</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1758104040664</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Изменение склада материала">
+      <option name="closed" value="true" />
+      <created>1759322754829</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1759322754829</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Немного изменил модель экономии" />
+    <MESSAGE value="Немного изменил модель базы деталей" />
+    <MESSAGE value="создал модели планирования работ" />
+    <MESSAGE value="создал вывод в админ панель модели планирования работ" />
+    <MESSAGE value="удалил тестовые модели" />
+    <MESSAGE value="редактирование имен" />
+    <MESSAGE value="Добовление спецификации и пересмотр релезации сборок в базе" />
+    <MESSAGE value="Изменение склада материала" />
+    <option name="LAST_COMMIT_MESSAGE" value="Изменение склада материала" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/cex/storage_details/models.py</url>
+          <line>24</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

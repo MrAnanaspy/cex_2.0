@@ -1,4 +1,4 @@
-from django.contrib import admin
+'''from django.contrib import admin
 from mptt.admin import MPTTModelAdmin
 
 from .models import *
@@ -48,4 +48,4 @@ class DetailAdmin(admin.ModelAdmin):
 
 @admin.register(Application)
 class DetailAdmin(admin.ModelAdmin):
-    pass
+    pass'''

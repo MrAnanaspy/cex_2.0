@@ -1,4 +1,4 @@
-from django.contrib import admin
+'''from django.contrib import admin
 from django.utils.html import format_html
 from django.dispatch import receiver
 from mptt.admin import MPTTModelAdmin
@@ -13,8 +13,9 @@ class DetailAdmin(MPTTModelAdmin):
 
     prepopulated_fields = {"slug": ("EAM",)}
 
-    '''def image_tag(self, obj):
+    def image_tag(self, obj):
             return format_html('<img src="{}" style="max-width:100px; max-height:100px"/>'.format(obj.photo.url))
     image_tag.short_description = 'Фото/Рендер'
     image_tag.allow_tags = True
+
 '''
