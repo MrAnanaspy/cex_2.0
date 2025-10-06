@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить материал - Склад ЧПУ</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .page-header {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            list-style: none;
+            font-size: 0.9rem;
+        }
+        
+        .breadcrumb li {
+            margin-right: 0.5rem;
+        }
+        
+        .breadcrumb li:after {
+            content: ">";
+            margin-left: 0.5rem;
+            color: #aaa;
+        }
+        
+        .breadcrumb li:last-child:after {
+            content: "";
+        }
+        
+        .breadcrumb a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .dimension-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .density-group {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1rem;
+            align-items: end;
+        }
+        
+        .dimension-input {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .weight-calculation {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .calculation-result {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .calculation-label {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .calculation-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--success-color);
+        }
+        
+        .calculation-hint {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 0.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .required:after {
+            content: " *";
+            color: var(--accent-color);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .form-hint {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.3rem;
+            font-style: italic;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .form-error {
+            color: var(--accent-color);
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+        
+        input.error, select.error, textarea.error {
+            border-color: var(--accent-color);
+        }
+        
+        .success-message {
+            background-color: rgba(46, 204, 113, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+        
+        .error-message {
+            background-color: rgba(231, 76, 60, 0.1);
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+        
+        .dimension-preview {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .preview-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .preview-value {
+            font-family: monospace;
+            background-color: white;
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        
+        .auto-calculate-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .toggle-label {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--success-color);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section ul li a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section ul li a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        /* Медиа-запросы для адаптивности */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+                position: absolute;
+                right: 15px;
+                top: 15px;
+            }
+            
+            nav {
+                width: 100%;
+                display: none;
+            }
+            
+            nav.active {
+                display: block;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            nav ul li {
+                margin: 0;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+            
+            nav ul li a {
+                display: block;
+                padding: 0.8rem 0;
+            }
+            
+            .form-container {
+                padding: 1.5rem;
+            }
+            
+            .dimension-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .density-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .page-header h1 {
+                font-size: 1.6rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .form-container {
+                padding: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">ЧПУ Склад</div>
+                <button class="mobile-menu-btn">☰</button>
+                <nav id="main-nav">
+                    <ul>
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="materials.html">Склад</a></li>
+                        <li><a href="add-material.html">Добавить материал</a></li>
+                        <li><a href="material-grades.html">Марки материалов</a></li>
+                        <li><a href="material-categories.html">Категории</a></li>
+                        <li><a href="material-forms.html">Формы</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Добавить материал на склад</h1>
+            <ul class="breadcrumb">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="materials.html">Склад материалов</a></li>
+                <li>Добавить материал</li>
+            </ul>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="success-message" id="successMessage">
+            Материал успешно добавлен на склад!
+        </div>
+        
+        <div class="error-message" id="errorMessage">
+            Ошибка при добавлении материала!
+        </div>
+
+        <form id="addMaterialForm" class="form-container" method="post">
+            {% csrf_token %}
+            <h2 class="section-title">Информация о материале</h2>
+            
+            <div class="form-group">
+                <label for="stamp" class="required">Марка материала</label>
+                {{form.stamp}}
+                <div class="form-error" id="stampError">Пожалуйста, выберите марку материала</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="type" class="required">Тип материала</label>
+                {{form.type}}
+                <div class="form-error" id="typeError">Пожалуйста, выберите тип материала</div>
+            </div>
+            
+            <!-- Динамические поля для размеров -->
+            <div class="form-group" id="dimensionsSection">
+                <label class="required">Размеры</label>
+                
+                <!-- Лист -->
+                <div id="sheetDimensions" class="dimension-group" style="display: none;">
+                    <div class="dimension-input">
+                        <label for="sheetLength">Длина, мм</label>
+                        <input type="number" id="sheetLength" placeholder="1000" min="1">
+                    </div>
+                    <div class="dimension-input">
+                        <label for="sheetWidth">Ширина, мм</label>
+                        <input type="number" id="sheetWidth" placeholder="500" min="1">
+                    </div>
+                    <div class="dimension-input">
+                        <label for="sheetThickness">Толщина, мм</label>
+                        <input type="number" id="sheetThickness" placeholder="10" step="0.1" min="0.1">
+                    </div>
+                </div>
+                
+                <!-- Пруток (круг) -->
+                <div id="rodDimensions" class="dimension-group" style="display: none;">
+                    <div class="dimension-input">
+                        <label for="rodDiameter">Диаметр, мм</label>
+                        <input type="number" id="rodDiameter" placeholder="30" step="0.1" min="0.1">
+                    </div>
+                    <div class="dimension-input">
+                        <label for="rodLength">Длина, мм</label>
+                        <input type="number" id="rodLength" placeholder="1000" min="1">
+                    </div>
+                </div>
+                
+                <!-- Труба -->
+                <div id="tubeDimensions" class="dimension-group" style="display: none;">
+                    <div class="dimension-input">
+                        <label for="tubeOuterDiameter">Наружный диаметр, мм</label>
+                        <input type="number" id="tubeOuterDiameter" placeholder="50" step="0.1" min="0.1">
+                    </div>
+                    <div class="dimension-input">
+                        <label for="tubeWallThickness">Толщина стенки, мм</label>
+                        <input type="number" id="tubeWallThickness" placeholder="3" step="0.1" min="0.1">
+                    </div>
+                    <div class="dimension-input">
+                        <label for="tubeLength">Длина, мм</label>
+                        <input type="number" id="tubeLength" placeholder="2000" min="1">
+                    </div>
+                </div>
+                
+                <!-- Профиль -->
+                <div id="profileDimensions" class="dimension-group" style="display: none;">
+                    <div class="dimension-input">
+                        <label for="profileWidth">Ширина, мм</label>
+                        <input type="number" id="profileWidth" placeholder="40" min="1">
+                    </div>
+                    <div class="dimension-input">
+                        <label for="profileHeight">Высота, мм</label>
+                        <input type="number" id="profileHeight" placeholder="40" min="1">
+                    </div>
+                    <div class="dimension-input">
+                        <label for="profileLength">Длина, мм</label>
+                        <input type="number" id="profileLength" placeholder="2000" min="1">
+                    </div>
+                </div>
+                
+                <!-- Проволока -->
+                <div id="wireDimensions" class="dimension-group" style="display: none;">
+                    <div class="dimension-input">
+                        <label for="wireDiameter">Диаметр, мм</label>
+                        <input type="number" id="wireDiameter" placeholder="2" step="0.01" min="0.01">
+                    </div>
+                    <div class="dimension-input">
+                        <label for="wireLength">Длина, мм</label>
+                        <input type="number" id="wireLength" placeholder="1000" min="1">
+                    </div>
+                </div>
+                
+                <!-- Уголок -->
+                <div id="angleDimensions" class="dimension-group" style="display: none;">
+                    <div class="dimension-input">
+                        <label for="angleWidth">Ширина полки, мм</label>
+                        <input type="number" id="angleWidth" placeholder="50" min="1">
+                    </div>
+                    <div class="dimension-input">
+                        <label for="angleThickness">Толщина, мм</label>
+                        <input type="number" id="angleThickness" placeholder="5" step="0.1" min="0.1">
+                    </div>
+                    <div class="dimension-input">
+                        <label for="angleLength">Длина, мм</label>
+                        <input type="number" id="angleLength" placeholder="2000" min="1">
+                    </div>
+                </div>
+                
+                <!-- Другое -->
+                <div id="otherDimensions" style="display: none;">
+                    <input type="text" id="otherSize" placeholder="Укажите размер в произвольной форме">
+                    <div class="form-hint">Например: Сфера R=100 мм или Конус 50×100 мм</div>
+                </div>
+                
+                <!-- Превью размера -->
+                <div class="dimension-preview" id="sizePreview" style="display: none;">
+                    <div class="preview-title">Размер материала:</div>
+                    {{form.size}}
+                </div>
+                
+                <div class="form-error" id="dimensionsError">Пожалуйста, укажите все необходимые размеры</div>
+            </div>
+            
+            <!-- Плотность материала -->
+            <div class="form-group">
+                <label for="density" class="required">Плотность материала, г/см³</label>
+                <div class="density-group">
+                    <div>
+                        <input type="number" id="density" placeholder="0.00" step="0.001" min="0.001" required>
+                        <div class="form-hint">Плотность автоматически подставляется при выборе марки материала</div>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-primary" id="calculateWeightBtn" style="width: 100%;">Рассчитать вес</button>
+                    </div>
+                </div>
+                <div class="form-error" id="densityError">Пожалуйста, укажите плотность материала</div>
+            </div>
+            
+            <!-- Расчет веса -->
+            <div class="weight-calculation" id="weightCalculation" style="display: none;">
+                <div class="auto-calculate-toggle">
+                    <span class="toggle-label">Авторасчет веса:</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="autoCalculate" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                <div class="calculation-result">
+                    <div class="calculation-label">Расчетный вес:</div>
+                    <div class="calculation-value" id="calculatedWeight">0.00 кг</div>
+                </div>
+                <div class="calculation-hint" id="calculationHint">
+                    Вес рассчитан на основе размеров и плотности материала
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="initial_weight" class="required">Материала всего, кг</label>
+                {{form.initial_weight}}
+                <div class="form-error" id="weightError">Пожалуйста, укажите вес материала</div>
+            </div>
+            
+            <h2 class="section-title" style="margin-top: 2rem;">Идентификационная информация</h2>
+            
+            <div class="form-group">
+                <label for="certificate" class="required">№ Сертификата</label>
+                {{form.certificate}}
+                <div class="form-error" id="certificateError">Пожалуйста, укажите номер сертификата</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="melting" class="required">№ Плавки</label>
+                {{form.melting}}
+                <div class="form-error" id="meltingError">Пожалуйста, укажите номер плавки</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="batch" class="required">№ Партии</label>
+                {{form.batch}}
+                <div class="form-error" id="batchError">Пожалуйста, укажите номер партии</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="place" class="required">Место</label>
+                {{form.place}}
+                <div class="form-hint">Укажите место хранения материала на складе</div>
+                <div class="form-error" id="placeError">Пожалуйста, укажите место хранения</div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="cancelBtn">Отмена</button>
+                <input type="submit" name="add" class="btn btn-success" value="Добавить"/>
+            </div>
+        </form>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ЧПУ Склад</h3>
+                    <p>Система управления складом материалов для предприятий с ЧПУ станками.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Навигация</h3>
+                    <ul>
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="materials.html">Склад</a></li>
+                        <li><a href="add-material.html">Добавить материал</a></li>
+                        <li><a href="material-grades.html">Марки материалов</a></li>
+                        <li><a href="material-categories.html">Категории</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Контакты</h3>
+                    <ul>
+                        <li>Телефон: +7 (999) 123-45-67</li>
+                        <li>Email: info@cnc-warehouse.ru</li>
+                        <li>Адрес: г. Москва, ул. Промышленная, д. 15</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 ЧПУ Склад. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Мобильное меню
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const mainNav = document.getElementById('main-nav');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                mainNav.classList.toggle('active');
+            });
+            
+            // Элементы формы
+            const form = document.getElementById('addMaterialForm');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const typeSelect = document.getElementById('type');
+            const stampSelect = document.getElementById('stamp');
+            const densityInput = document.getElementById('density');
+            const calculateWeightBtn = document.getElementById('calculateWeightBtn');
+            const autoCalculateToggle = document.getElementById('autoCalculate');
+            const initialWeightInput = document.getElementById('initial_weight');
+            
+            // Скрыть все блоки с размерами
+            function hideAllDimensionGroups() {
+                document.querySelectorAll('[id$="Dimensions"]').forEach(group => {
+                    group.style.display = 'none';
+                });
+                document.getElementById('sizePreview').style.display = 'none';
+            }
+            
+            // Показать соответствующий блок размеров
+            function showDimensionGroup(type) {
+                hideAllDimensionGroups();
+                
+                switch(type) {
+                    case 'sheet':
+                        document.getElementById('sheetDimensions').style.display = 'grid';
+                        break;
+                    case 'rod':
+                        document.getElementById('rodDimensions').style.display = 'grid';
+                        break;
+                    case 'tube':
+                        document.getElementById('tubeDimensions').style.display = 'grid';
+                        break;
+                    case 'profile':
+                        document.getElementById('profileDimensions').style.display = 'grid';
+                        break;
+                    case 'wire':
+                        document.getElementById('wireDimensions').style.display = 'grid';
+                        break;
+                    case 'angle':
+                        document.getElementById('angleDimensions').style.display = 'grid';
+                        break;
+                    case 'other':
+                        document.getElementById('otherDimensions').style.display = 'block';
+                        break;
+                }
+            }
+            
+            // Обновить превью размера
+            function updateSizePreview() {
+                const type = typeSelect.value;
+                let previewText = '';
+                
+                switch(type) {
+                    case 'sheet':
+                        const length = document.getElementById('sheetLength').value;
+                        const width = document.getElementById('sheetWidth').value;
+                        const thickness = document.getElementById('sheetThickness').value;
+                        if (length && width && thickness) {
+                            previewText = `${length} × ${width} × ${thickness} мм`;
+                        }
+                        break;
+                    case 'rod':
+                        const diameter = document.getElementById('rodDiameter').value;
+                        const rodLength = document.getElementById('rodLength').value;
+                        if (diameter && rodLength) {
+                            previewText = `Ø${diameter} × ${rodLength} мм`;
+                        }
+                        break;
+                    case 'tube':
+                        const outerDia = document.getElementById('tubeOuterDiameter').value;
+                        const wallThickness = document.getElementById('tubeWallThickness').value;
+                        const tubeLength = document.getElementById('tubeLength').value;
+                        if (outerDia && wallThickness && tubeLength) {
+                            previewText = `Труба Ø${outerDia} × ${wallThickness} × ${tubeLength} мм`;
+                        }
+                        break;
+                    case 'profile':
+                        const profileWidth = document.getElementById('profileWidth').value;
+                        const profileHeight = document.getElementById('profileHeight').value;
+                        const profileLength = document.getElementById('profileLength').value;
+                        if (profileWidth && profileHeight && profileLength) {
+                            previewText = `Профиль ${profileWidth} × ${profileHeight} × ${profileLength} мм`;
+                        }
+                        break;
+                    case 'wire':
+                        const wireDiameter = document.getElementById('wireDiameter').value;
+                        const wireLength = document.getElementById('wireLength').value;
+                        if (wireDiameter && wireLength) {
+                            previewText = `Проволока Ø${wireDiameter} × ${wireLength} мм`;
+                        }
+                        break;
+                    case 'angle':
+                        const angleWidth = document.getElementById('angleWidth').value;
+                        const angleThickness = document.getElementById('angleThickness').value;
+                        const angleLength = document.getElementById('angleLength').value;
+                        if (angleWidth && angleThickness && angleLength) {
+                            previewText = `Уголок ${angleWidth} × ${angleWidth} × ${angleThickness} × ${angleLength} мм`;
+                        }
+                        break;
+                    case 'other':
+                        const otherSize = document.getElementById('otherSize').value;
+                        if (otherSize) {
+                            previewText = otherSize;
+                        }
+                        break;
+                }
+                
+                if (previewText) {
+                    document.getElementById('previewValue').value = previewText;
+                    console.log('Найдено поле size:', document.getElementById('previewValue'));
+                    console.log('Значение поля size после заполнения:', document.getElementById('previewValue').value);
+                    document.getElementById('sizePreview').style.display = 'block';
+                } else {
+                    document.getElementById('sizePreview').style.display = 'none';
+                }
+            }
+            
+            // Расчет веса материала
+            function calculateWeight() {
+                const type = typeSelect.value;
+                const density = parseFloat(densityInput.value);
+                
+                if (!density || isNaN(density) || density <= 0) {
+                    return 0;
+                }
+                
+                let volume = 0; // в см³
+                
+                switch(type) {
+                    case 'sheet':
+                        const length = parseFloat(document.getElementById('sheetLength').value) || 0;
+                        const width = parseFloat(document.getElementById('sheetWidth').value) || 0;
+                        const thickness = parseFloat(document.getElementById('sheetThickness').value) || 0;
+                        volume = (length * width * thickness) / 1000; // мм³ -> см³
+                        break;
+                        
+                    case 'rod':
+                        const diameter = parseFloat(document.getElementById('rodDiameter').value) || 0;
+                        const rodLength = parseFloat(document.getElementById('rodLength').value) || 0;
+                        const radius = diameter / 20; // мм -> см
+                        volume = (Math.PI * Math.pow(radius, 2) * rodLength) / 10; // см³
+                        break;
+                        
+                    case 'tube':
+                        const outerDia = parseFloat(document.getElementById('tubeOuterDiameter').value) || 0;
+                        const wallThickness = parseFloat(document.getElementById('tubeWallThickness').value) || 0;
+                        const tubeLength = parseFloat(document.getElementById('tubeLength').value) || 0;
+                        const outerRadius = outerDia / 20; // мм -> см
+                        const innerRadius = (outerDia - 2 * wallThickness) / 20; // мм -> см
+                        volume = (Math.PI * (Math.pow(outerRadius, 2) - Math.pow(innerRadius, 2)) * tubeLength) / 10; // см³
+                        break;
+                        
+                    case 'profile':
+                        const profileWidth = parseFloat(document.getElementById('profileWidth').value) || 0;
+                        const profileHeight = parseFloat(document.getElementById('profileHeight').value) || 0;
+                        const profileLength = parseFloat(document.getElementById('profileLength').value) || 0;
+                        volume = (profileWidth * profileHeight * profileLength) / 1000; // мм³ -> см³
+                        break;
+                        
+                    case 'wire':
+                        const wireDiameter = parseFloat(document.getElementById('wireDiameter').value) || 0;
+                        const wireLength = parseFloat(document.getElementById('wireLength').value) || 0;
+                        const wireRadius = wireDiameter / 20; // мм -> см
+                        volume = (Math.PI * Math.pow(wireRadius, 2) * wireLength) / 10; // см³
+                        break;
+                        
+                    case 'angle':
+                        const angleWidth = parseFloat(document.getElementById('angleWidth').value) || 0;
+                        const angleThickness = parseFloat(document.getElementById('angleThickness').value) || 0;
+                        const angleLength = parseFloat(document.getElementById('angleLength').value) || 0;
+                        // Упрощенный расчет для уголка (две полки минус пересечение)
+                        const singleLegVolume = (angleWidth * angleThickness * angleLength) / 1000;
+                        volume = 2 * singleLegVolume - (angleThickness * angleThickness * angleLength) / 1000;
+                        break;
+                }
+                
+                const weight = volume * density / 1000; // г -> кг
+                return weight > 0 ? weight : 0;
+            }
+            
+            // Обновить отображение расчетного веса
+            function updateWeightDisplay() {
+                const weight = calculateWeight();
+                if (weight > 0) {
+                    document.getElementById('calculatedWeight').textContent = weight.toFixed(2) + ' кг';
+                    document.getElementById('weightCalculation').style.display = 'block';
+                    
+                    if (autoCalculateToggle.checked) {
+                        initialWeightInput.value = weight.toFixed(2);
+                    }
+                } else {
+                    document.getElementById('weightCalculation').style.display = 'none';
+                }
+            }
+            
+            // Обработчик изменения типа материала
+            typeSelect.addEventListener('change', function() {
+                showDimensionGroup(this.value);
+            });
+            
+            // Обработчик изменения марки материала (автоподстановка плотности)
+            stampSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const density = selectedOption.getAttribute('data-density');
+                if (density) {
+                    densityInput.value = density;
+                }
+            });
+            
+            // Обработчики изменения размеров для обновления превью и веса
+            document.querySelectorAll('input[type="number"], #otherSize').forEach(input => {
+                input.addEventListener('input', function() {
+                    updateSizePreview();
+                    if (autoCalculateToggle.checked) {
+                        updateWeightDisplay();
+                    }
+                });
+            });
+            
+            // Обработчик изменения плотности
+            densityInput.addEventListener('input', function() {
+                if (autoCalculateToggle.checked) {
+                    updateWeightDisplay();
+                }
+            });
+            
+            // Обработчик кнопки расчета веса
+            calculateWeightBtn.addEventListener('click', function() {
+                updateWeightDisplay();
+            });
+            
+            // Обработчик переключателя авторасчета
+            autoCalculateToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    updateWeightDisplay();
+                }
+            });
+            
+            // Функция проверки обязательных полей
+            function validateField(fieldId, errorId) {
+                const field = document.getElementById(fieldId);
+                const error = document.getElementById(errorId);
+                
+                if (!field.value.trim()) {
+                    field.classList.add('error');
+                    error.style.display = 'block';
+                    return false;
+                } else {
+                    field.classList.remove('error');
+                    error.style.display = 'none';
+                    return true;
+                }
+            }
+            
+            // Функция проверки числового поля
+            function validateNumberField(fieldId, errorId) {
+                const field = document.getElementById(fieldId);
+                const error = document.getElementById(errorId);
+                const value = parseFloat(field.value);
+                
+                if (!field.value.trim() || isNaN(value) || value <= 0) {
+                    field.classList.add('error');
+                    error.style.display = 'block';
+                    return false;
+                } else {
+                    field.classList.remove('error');
+                    error.style.display = 'none';
+                    return true;
+                }
+            }
+            
+            // Функция проверки размеров
+            function validateDimensions() {
+                const type = typeSelect.value;
+                let isValid = true;
+                
+                switch(type) {
+                    case 'sheet':
+                        isValid = validateNumberField('sheetLength', 'dimensionsError') &&
+                                 validateNumberField('sheetWidth', 'dimensionsError') &&
+                                 validateNumberField('sheetThickness', 'dimensionsError');
+                        break;
+                    case 'rod':
+                        isValid = validateNumberField('rodDiameter', 'dimensionsError') &&
+                                 validateNumberField('rodLength', 'dimensionsError');
+                        break;
+                    case 'tube':
+                        isValid = validateNumberField('tubeOuterDiameter', 'dimensionsError') &&
+                                 validateNumberField('tubeWallThickness', 'dimensionsError') &&
+                                 validateNumberField('tubeLength', 'dimensionsError');
+                        break;
+                    case 'profile':
+                        isValid = validateNumberField('profileWidth', 'dimensionsError') &&
+                                 validateNumberField('profileHeight', 'dimensionsError') &&
+                                 validateNumberField('profileLength', 'dimensionsError');
+                        break;
+                    case 'wire':
+                        isValid = validateNumberField('wireDiameter', 'dimensionsError') &&
+                                 validateNumberField('wireLength', 'dimensionsError');
+                        break;
+                    case 'angle':
+                        isValid = validateNumberField('angleWidth', 'dimensionsError') &&
+                                 validateNumberField('angleThickness', 'dimensionsError') &&
+                                 validateNumberField('angleLength', 'dimensionsError');
+                        break;
+                    case 'other':
+                        isValid = validateField('otherSize', 'dimensionsError');
+                        break;
+                }
+                
+                return isValid;
+            }
+            
+            // Функция сброса формы
+            function resetForm() {
+                form.reset();
+                hideAllDimensionGroups();
+                document.getElementById('weightCalculation').style.display = 'none';
+                
+                // Скрыть сообщения
+                successMessage.style.display = 'none';
+                errorMessage.style.display = 'none';
+            }
+            
+            // Обработчик отправки формы
+            form.addEventListener('submit', function(e) {
+                
+                // Валидация полей
+                const isStampValid = validateField('stamp', 'stampError');
+                const isTypeValid = validateField('type', 'typeError');
+                const isDimensionsValid = validateDimensions();
+                const isDensityValid = validateNumberField('density', 'densityError');
+                const isWeightValid = validateNumberField('initial_weight', 'weightError');
+                const isCertificateValid = validateField('certificate', 'certificateError');
+                const isMeltingValid = validateField('melting', 'meltingError');
+                const isBatchValid = validateField('batch', 'batchError');
+                const isPlaceValid = validateField('place', 'placeError');
+                
+                // Если все поля валидны
+                if (!(isStampValid && isTypeValid && isDimensionsValid && isDensityValid && isWeightValid &&
+        isCertificateValid && isMeltingValid && isBatchValid && isPlaceValid)) {
+        e.preventDefault(); // Блокируем отправку только при ошибках
+        errorMessage.style.display = 'block';
+        successMessage.style.display = 'none';
+        return;
+    }
+
+    // Если все валидно, форма отправится автоматически
+    // Можно показать сообщение об успехе, но форма уже отправится
+    successMessage.style.display = 'block';
+    errorMessage.style.display = 'none';
+});
+            
+            // Обработчик кнопки отмены
+            cancelBtn.addEventListener('click', function() {
+                if (confirm('Вы уверены, что хотите отменить добавление материала? Все введенные данные будут потеряны.')) {
+                    resetForm();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

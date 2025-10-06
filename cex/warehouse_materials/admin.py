@@ -3,7 +3,7 @@ from django.utils.html import format_html
 from django.dispatch import receiver
 from mptt.admin import MPTTModelAdmin
 
-from .models import AllMaterials, ShapeMaterials, WarehouseMaterial, WarehouseMaterial3D, MaterialCategory
+from .models import AllMaterials, WarehouseMaterial, WarehouseMaterial3D, MaterialCategory
 
 
 # Register your models here.
@@ -15,9 +15,6 @@ class AllMaterialsAdmin(admin.ModelAdmin):
 class MaterialCategoryAdmin(MPTTModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
 
-@admin.register(ShapeMaterials)
-class ShapeMaterialsAdmin(admin.ModelAdmin):
-    pass
 
 @admin.register(WarehouseMaterial)
 class WarehouseMaterialAdmin(admin.ModelAdmin):

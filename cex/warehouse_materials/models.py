@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import TextField
 from mptt.fields import TreeForeignKey
@@ -36,25 +37,15 @@ class AllMaterials(models.Model):
         db_table = "AllMaterials"
         verbose_name_plural = 'Марка материала'
 
-class ShapeMaterials(models.Model):
-    shape = models.CharField(max_length=50, verbose_name='Форма материала', primary_key=True)
-
-    def __str__(self):
-        return f"{self.shape}"
-
-    class Meta:
-        db_table = "MaterialsShape"
-        verbose_name_plural = 'Формы материала'
-
 
 class WarehouseMaterial(models.Model):
     stamp = models.ForeignKey(AllMaterials, on_delete=models.CASCADE, verbose_name='Марка материала', null=True,
                               blank=True)
-    type = models.ForeignKey(ShapeMaterials, on_delete=models.CASCADE, verbose_name='Форма материла', null=True,
-                                    blank=True)
+    type = models.CharField(max_length=50, verbose_name='Форма', null=True, blank=True)
     size = models.CharField(max_length=50, verbose_name='Размер', null=True, blank=True)
-    initial_weight = models.FloatField(max_length=50, verbose_name='Материала всего, кг', null=True, blank=True)
-    actual_weight = models.FloatField(max_length=50, verbose_name='Материала осталось, кг', null=True, blank=True)
+    initial_weight = models.FloatField(verbose_name='Материала всего, кг', null=True, blank=True)
+    actual_weight = models.FloatField(verbose_name='Материала осталось, кг', null=True, blank=True)
+    price = models.FloatField(verbose_name='Цена материала', null=True, blank=True)
     certificate = models.CharField(max_length=50, verbose_name='№ Сертификата', null=True, blank=True)
     melting  = models.CharField(max_length=50, verbose_name='№ Плавки', null=True, blank=True)
     batch = models.CharField(max_length=50, verbose_name='№ Партии', null=True, blank=True)
@@ -85,5 +76,20 @@ class WarehouseMaterial3D(models.Model):
     class Meta:
         db_table = "WarehouseMaterial3D"
         verbose_name_plural = 'Склад материала 3Д'
+
+class ManualDebits(models.Model):
+    datetime = models.DateTimeField(verbose_name='Время изменения')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Марка материала', null=True,
+                              blank=True)
+    material = models.ForeignKey(WarehouseMaterial, on_delete=models.CASCADE, verbose_name='Марка материала', null=True,
+                              blank=True)
+    quantity = models.FloatField(verbose_name='Кол-во материала в кг')
+
+    def __str__(self):
+        return f"{self.datetime} - {self.material}"
+
+    class Meta:
+        db_table = "ManualDebits"
+        verbose_name_plural = 'История списаний'
 
 
