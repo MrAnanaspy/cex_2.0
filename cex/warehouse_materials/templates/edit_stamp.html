@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактировать марку материала - Склад ЧПУ</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .page-header {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            list-style: none;
+            font-size: 0.9rem;
+        }
+        
+        .breadcrumb li {
+            margin-right: 0.5rem;
+        }
+        
+        .breadcrumb li:after {
+            content: ">";
+            margin-left: 0.5rem;
+            color: #aaa;
+        }
+        
+        .breadcrumb li:last-child:after {
+            content: "";
+        }
+        
+        .breadcrumb a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .material-info-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .material-info-card h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .material-info-card p {
+            opacity: 0.9;
+            margin-bottom: 0.3rem;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .required:after {
+            content: " *";
+            color: var(--accent-color);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .form-hint {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.3rem;
+            font-style: italic;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-danger {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .form-error {
+            color: var(--accent-color);
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+        
+        input.error, select.error, textarea.error {
+            border-color: var(--accent-color);
+        }
+        
+        .success-message {
+            background-color: rgba(46, 204, 113, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+        
+        .error-message {
+            background-color: rgba(231, 76, 60, 0.1);
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+        
+        .material-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .stat-card {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary-color);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .delete-section {
+            background-color: #fdf2f2;
+            border: 1px solid #fed7d7;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .delete-section h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+        
+        .delete-warning {
+            color: #e53e3e;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section ul li a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section ul li a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        /* Медиа-запросы для адаптивности */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+                position: absolute;
+                right: 15px;
+                top: 15px;
+            }
+            
+            nav {
+                width: 100%;
+                display: none;
+            }
+            
+            nav.active {
+                display: block;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            nav ul li {
+                margin: 0;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+            
+            nav ul li a {
+                display: block;
+                padding: 0.8rem 0;
+            }
+            
+            .form-container {
+                padding: 1.5rem;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .page-header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .material-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .form-container {
+                padding: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.1rem;
+            }
+            
+            .material-info-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">ЧПУ Склад</div>
+                <button class="mobile-menu-btn">☰</button>
+                <nav id="main-nav">
+                    <ul>
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="materials.html">Склад</a></li>
+                        <li><a href="add-material.html">Добавить материал</a></li>
+                        <li><a href="material-grades.html">Марки материалов</a></li>
+                        <li><a href="material-categories.html">Категории</a></li>
+                        <li><a href="material-forms.html">Формы</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Редактировать марку материала</h1>
+            <ul class="breadcrumb">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="material-grades.html">Марки материалов</a></li>
+                <li>Редактировать марку</li>
+            </ul>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="success-message" id="successMessage">
+            Марка материала успешно обновлена!
+        </div>
+        
+        <div class="error-message" id="errorMessage">
+            Ошибка при обновлении марки материала!
+        </div>
+
+        <!-- Карточка с информацией о материале -->
+        <div class="material-info-card">
+            <h3>{{stamp.type}} - {{stamp.stamp}}</h3>
+        </div>
+
+        <form id="editMaterialForm" class="form-container" method="post">
+            {% csrf_token %}
+            
+            <h2 class="section-title">Основная информация</h2>
+            
+            <div class="form-group">
+                <label for="gradeName" class="required">Название марки</label>
+                {{form.stamp}}
+                <div class="form-error" id="nameError">Пожалуйста, введите название марки</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="materialType" class="required">Категория материала</label>
+                {{form.category}}
+                <div class="form-error" id="categoryError">Пожалуйста, выберите категорию</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="density" class="required">Плотность, г/см³</label>
+                {{form.density}}
+                <div class="form-hint">Плотность материала используется для автоматического расчета веса</div>
+                <div class="form-error" id="densityError">Пожалуйста, укажите плотность материала</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Описание</label>
+                {{form.description}}
+                <div class="form-hint">Краткое описание характеристик и применения материала</div>
+            </div>
+            
+            <!-- Статистика использования -->
+            <div class="material-stats">
+                <div class="stat-card">
+                    <div class="stat-value">{{quantity_on}}</div>
+                    <div class="stat-label">Материалов на складе</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{quantity_off}}</div>
+                    <div class="stat-label">Материалов списано</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{weight}} кг</div>
+                    <div class="stat-label">Общий вес</div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <a href="/" type="button" class="btn btn-secondary">Отмена</a>
+                <input type="submit" id="submitBtn" class="btn btn-success" value="Сохранить изменения" />
+            </div>
+        </form>
+        
+        <!-- Секция удаления -->
+        <form id="delete" method="post">
+            {% csrf_token %}
+        <div class="delete-section">
+            <h3>Опасная зона</h3>
+            <p class="delete-warning">
+                ⚠️ Удаление марки материала невозможно отменить. Все связанные материалы будут помечены как "Неизвестная марка".
+            </p>
+            {{form_del.confirmation}}
+            <br>
+            <br>
+            <input type="submit" class="btn btn-danger" id="deleteBtn" value="Удалить марку материала" >
+        </div>
+        </form>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ЧПУ Склад</h3>
+                    <p>Система управления складом материалов для предприятий с ЧПУ станками.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Навигация</h3>
+                    <ul>
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="materials.html">Склад</a></li>
+                        <li><a href="add-material.html">Добавить материал</a></li>
+                        <li><a href="material-grades.html">Марки материалов</a></li>
+                        <li><a href="material-categories.html">Категории</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Контакты</h3>
+                    <ul>
+                        <li>Телефон: +7 (999) 123-45-67</li>
+                        <li>Email: info@cnc-warehouse.ru</li>
+                        <li>Адрес: г. Москва, ул. Промышленная, д. 15</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 ЧПУ Склад. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Мобильное меню
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const mainNav = document.getElementById('main-nav');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                mainNav.classList.toggle('active');
+            });
+            
+            // Элементы формы
+            const form = document.getElementById('editMaterialForm');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const saveDraftBtn = document.getElementById('saveDraftBtn');
+            const deleteBtn = document.getElementById('deleteBtn');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Функция проверки обязательных полей
+            function validateField(fieldId, errorId) {
+                const field = document.getElementById(fieldId);
+                const error = document.getElementById(errorId);
+                
+                if (!field.value.trim()) {
+                    field.classList.add('error');
+                    error.style.display = 'block';
+                    return false;
+                } else {
+                    field.classList.remove('error');
+                    error.style.display = 'none';
+                    return true;
+                }
+            }
+            
+            // Функция проверки числового поля
+            function validateNumberField(fieldId, errorId) {
+                const field = document.getElementById(fieldId);
+                const error = document.getElementById(errorId);
+                const value = parseFloat(field.value);
+                
+                if (!field.value.trim() || isNaN(value) || value <= 0) {
+                    field.classList.add('error');
+                    error.style.display = 'block';
+                    return false;
+                } else {
+                    field.classList.remove('error');
+                    error.style.display = 'none';
+                    return true;
+                }
+            }
+            
+            // Функция сброса формы
+            function resetForm() {
+                // В реальном приложении здесь будет сброс к исходным значениям
+                successMessage.style.display = 'none';
+                errorMessage.style.display = 'none';
+            }
+            
+            // Обработчик отправки формы
+            form.addEventListener('submit', function(e) {
+                
+                // Валидация полей
+                const isNameValid = validateField('gradeName', 'nameError');
+                const isCategoryValid = validateField('materialType', 'categoryError');
+                const isDensityValid = validateNumberField('density', 'densityError');
+
+                 if !(isNameValid && isCategoryValid && isDensityValid) {
+                    e.preventDefault();
+                    }
+                // Если все поля валидны
+                if (isNameValid && isCategoryValid && isDensityValid) {
+                    // В реальном приложении здесь будет отправка данных на сервер
+                    
+                    // Показываем сообщение об успехе
+                    successMessage.style.display = 'block';
+                    errorMessage.style.display = 'none';
+                    
+                    // Прокручиваем к сообщению
+                    successMessage.scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Обновляем дату последнего изменения в карточке
+                    const now = new Date();
+                    const dateString = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'});
+                    document.querySelector('.material-info-card p:last-child').innerHTML = `<strong>Последнее изменение:</strong> ${dateString}`;
+                } else {
+                    errorMessage.style.display = 'block';
+                    successMessage.style.display = 'none';
+                }
+            });
+            
+            // Обработчик кнопки отмены
+            cancelBtn.addEventListener('click', function() {
+                if (confirm('Вы уверены, что хотите отменить редактирование? Все несохраненные изменения будут потеряны.')) {
+                    window.location.href = 'material-grades.html';
+                }
+            });
+            
+            // Обработчик кнопки сохранения черновика
+            saveDraftBtn.addEventListener('click', function() {
+                // В реальном приложении здесь будет сохранение черновика
+                alert('Черновик марки материала сохранен');
+            });
+            
+            // Обработчик кнопки удаления
+            deleteBtn.addEventListener('click', function() {
+                const materialName = document.getElementById('gradeName').value;
+                
+                if (confirm(`Вы уверены, что хотите удалить марку "${materialName}"? Это действие невозможно отменить.`)) {
+                    if (confirm('Это окончательное удаление! Все материалы этой марки будут потеряны. Продолжить?')) {
+                        // В реальном приложении здесь будет запрос на удаление
+                        alert(`Марка "${materialName}" удалена`);
+                        window.location.href = 'material-grades.html';
+                    }
+                }
+            });
+            
+            // Автосохранение при изменении полей (каждые 30 секунд)
+            let autoSaveTimer;
+            const formInputs = form.querySelectorAll('input, select, textarea');
+            
+            formInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    clearTimeout(autoSaveTimer);
+                    autoSaveTimer = setTimeout(function() {
+                        console.log('Автосохранение изменений...');
+                        // В реальном приложении здесь будет автосохранение
+                    }, 30000);
+                });
+            });
+            
+            // Показ подсказок при наведении на поля
+            formInputs.forEach(input => {
+                input.addEventListener('mouseenter', function() {
+                    const hint = this.parentElement.querySelector('.form-hint');
+                    if (hint) {
+                        hint.style.opacity = '1';
+                    }
+                });
+                
+                input.addEventListener('mouseleave', function() {
+                    const hint = this.parentElement.querySelector('.form-hint');
+                    if (hint) {
+                        hint.style.opacity = '0.7';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

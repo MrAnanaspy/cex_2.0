@@ -1,8 +1,8 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
-
-from .models import AllMaterials
+from mptt.forms import TreeNodeChoiceField
+from .models import AllMaterials, MaterialCategory
 
 
 class MaterialSelect(forms.Select):
@@ -131,3 +131,58 @@ class AddMaterial(forms.Form):
             case 'angle':
                 type_value = "Уголок"
         return type_value
+
+
+class MaterialStamp(forms.Form):
+    stamp = forms.CharField(
+        help_text='№ Партии',
+        widget=forms.TextInput(attrs={
+            'type': 'text',
+            'placeholder': 'Например: Алюминий 6061',
+            'id': 'gradeName',
+            'required': 'required',
+        })
+    )
+    category = TreeNodeChoiceField(
+        queryset=MaterialCategory.objects.all(),
+        empty_label="Выбери категорию",
+        widget=forms.Select(attrs={
+            'required': 'required',
+            'id': 'materialType',
+            'class': "required",
+        })
+    )
+    density = forms.FloatField(
+        widget=forms.TextInput(attrs={
+            'type': 'number',
+            'placeholder': '0.00',
+            'id': 'density',
+            'step': '0.001',
+            'min': '0',
+        }))
+    description = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'placeholder': 'Дополнительная информация о марке материала...',
+            'id': 'description',
+            'rows': "3",
+        })
+    )
+
+class DeleteStamp(forms.Form):
+    confirmation = forms.CharField(
+        help_text='Введите слово удалить',
+        widget=forms.TextInput(attrs={
+            'type': 'text',
+            'placeholder': 'Введите слово удалить',
+            'id': 'gradeName',
+            'required': 'required',
+        })
+    )
+
+    def clean_delete(self):
+        data = self.cleaned_data['confirmation']
+        print(data)
+        if data != 'удалить' and data != 'Удалить':
+            raise ValidationError(_('Invalid date - не верно написано удалить'))
+        else:
+            return True

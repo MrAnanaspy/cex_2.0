@@ -562,42 +562,35 @@
             <div class="form-container">
                 <h2 class="section-title" id="formTitle">Добавить новую марку</h2>
                 
-                <form id="materialGradeForm">
+                <form id="materialGradeForm" method="post">
+                    {% csrf_token %}
                     <div class="form-group">
                         <label for="gradeName" class="required">Наименование марки</label>
-                        <input type="text" id="gradeName" placeholder="Например: Алюминий 6061">
+                        {{form.stamp}}
                         <div class="form-error" id="nameError">Пожалуйста, введите наименование марки</div>
                     </div>
                     
                     <div class="form-group">
                         <label for="materialType" class="required">Тип материала</label>
-                        <select id="materialType">
-                            <option value="">Выберите тип</option>
-                            <option value="metal">Металл</option>
-                            <option value="plastic">Пластик</option>
-                            <option value="composite">Композит</option>
-                            <option value="wood">Дерево</option>
-                            <option value="other">Другое</option>
-                        </select>
+                        {{form.category}}
                         <div class="form-error" id="typeError">Пожалуйста, выберите тип материала</div>
                     </div>
                     
                     <div class="form-group">
                         <label for="density" class="required">Плотность, г/см³</label>
-                        <input type="number" id="density" placeholder="0.00" step="0.001" min="0">
+                        {{form.density}}
                         <div class="form-hint">Укажите плотность материала в граммах на кубический сантиметр</div>
                         <div class="form-error" id="densityError">Пожалуйста, укажите плотность материала</div>
                     </div>
                     
                     <div class="form-group">
                         <label for="description">Описание</label>
-                        <textarea id="description" rows="3" placeholder="Дополнительная информация о марке материала..."></textarea>
+                        {{form.description}}
                     </div>
                     
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary" id="cancelBtn">Отмена</button>
-                        <button type="button" class="btn btn-primary" id="updateBtn" style="display: none;">Обновить</button>
-                        <button type="submit" class="btn btn-success" id="submitBtn">Добавить марку</button>
+                        <input type="submit" class="btn btn-success" id="submitBtn" value="Добавить марку" />
                     </div>
                 </form>
             </div>
@@ -617,46 +610,17 @@
                         </tr>
                     </thead>
                     <tbody id="gradesTableBody">
+                    {% for stamp in stamps %}
                         <tr>
-                            <td>Алюминий 6061</td>
-                            <td>Металл</td>
-                            <td>2.70</td>
-                            <td>Алюминиевый сплав с магнием и кремнием</td>
+                            <td>{{stamp.stamp}}</td>
+                            <td>{{stamp.type}}</td>
+                            <td>{{stamp.density}}</td>
+                            <td>{{stamp.description}}</td>
                             <td class="actions-cell">
-                                <button class="btn btn-primary btn-small edit-btn">Изменить</button>
-                                <button class="btn btn-danger btn-small delete-btn">Удалить</button>
+                                <a href="/edit_stamp/{{stamp}}" class="btn btn-primary btn-small edit-btn" > Изменить</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td>Сталь 304</td>
-                            <td>Металл</td>
-                            <td>7.93</td>
-                            <td>Нержавеющая сталь аустенитного класса</td>
-                            <td class="actions-cell">
-                                <button class="btn btn-primary btn-small edit-btn">Изменить</button>
-                                <button class="btn btn-danger btn-small delete-btn">Удалить</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Поликарбонат</td>
-                            <td>Пластик</td>
-                            <td>1.20</td>
-                            <td>Прочный термопластичный полимер</td>
-                            <td class="actions-cell">
-                                <button class="btn btn-primary btn-small edit-btn">Изменить</button>
-                                <button class="btn btn-danger btn-small delete-btn">Удалить</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Латунь Л63</td>
-                            <td>Металл</td>
-                            <td>8.50</td>
-                            <td>Медно-цинковый сплав</td>
-                            <td class="actions-cell">
-                                <button class="btn btn-primary btn-small edit-btn">Изменить</button>
-                                <button class="btn btn-danger btn-small delete-btn">Удалить</button>
-                            </td>
-                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
                 
@@ -845,15 +809,15 @@
             
             // Обработчик отправки формы
             form.addEventListener('submit', function(e) {
-                e.preventDefault();
+
                 
                 // Валидация полей
                 const isNameValid = validateField('gradeName', 'nameError');
                 const isTypeValid = validateField('materialType', 'typeError');
-                const isDensityValid = validateField('density', 'densityError');
                 
                 // Если все поля валидны
-                if (isNameValid && isTypeValid && isDensityValid) {
+                if !(isNameValid && isTypeValid) {
+                    e.preventDefault();
                     // В реальном приложении здесь будет отправка данных на сервер
                     
                     // Показываем сообщение об успехе
@@ -888,10 +852,9 @@
                 // Валидация полей
                 const isNameValid = validateField('gradeName', 'nameError');
                 const isTypeValid = validateField('materialType', 'typeError');
-                const isDensityValid = validateField('density', 'densityError');
                 
                 // Если все поля валидны
-                if (isNameValid && isTypeValid && isDensityValid) {
+                if (isNameValid && isTypeValid) {
                     // В реальном приложении здесь будет отправка данных на сервер
                     
                     // Показываем сообщение об успехе
