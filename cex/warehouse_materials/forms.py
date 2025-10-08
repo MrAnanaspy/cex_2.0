@@ -65,6 +65,17 @@ class AddMaterial(forms.Form):
         })
 
     )
+    price = forms.FloatField(
+        help_text='Цена всего, руб.',
+        widget=forms.TextInput(attrs={
+            'type': 'number',
+            'placeholder': '0.0',
+            'id': 'price',
+            'step': '0.1',
+            'min': '0',
+        })
+
+    )
     certificate = forms.CharField(
         help_text='№ Сертификата',
         widget=forms.TextInput(attrs={
@@ -101,11 +112,115 @@ class AddMaterial(forms.Form):
             'required': 'required',
         })
     )
-    density = forms.FloatField(
-        required=False,
-        widget=forms.HiddenInput(attrs={
-            'id': 'density_field'
-        }))
+
+    def clean_id(self):
+        data = self.cleaned_data['stamp']
+
+        if data != '':
+            raise ValidationError(_('Invalid date - значение не может быть меньше ноля'))
+
+        return data
+
+class EditMaterial(forms.Form):
+    stamp = forms.ModelChoiceField(
+        queryset=AllMaterials.objects.all(),
+        empty_label="Выбери марку",
+        widget=MaterialSelect(attrs={
+            'required': 'required',
+            'id': 'stamp',
+        })
+    )
+    type = forms.ChoiceField(
+        help_text='форма',
+        widget=forms.Select(attrs={
+            'required': 'required',
+            'id': 'type',
+        }),
+        choices=(
+            ('', "Выберите тип"),
+            ('Лист', "Лист"),
+            ("Пруток (круг)", "Пруток (круг)"),
+            ("Труба", "Труба"),
+            ('Профиль', "Профиль"),
+            ("Проволока", "Проволока"),
+            ("Уголок", "Уголок"),
+        ))
+    size = forms.CharField(
+        help_text='Размер',
+        widget=forms.TextInput(attrs={
+            'class': 'preview-value',
+            'id': 'previewValue',
+        })
+    )
+    initial_weight = forms.FloatField(
+        help_text='Материала всего, кг',
+        widget=forms.TextInput(attrs={
+            'type': 'number',
+            'placeholder': '0.00',
+            'id': 'initial_weight',
+            'step': '0.01',
+            'min': '0',
+        })
+
+    )
+    actual_weight = forms.FloatField(
+        help_text='Материала всего, кг',
+        widget=forms.TextInput(attrs={
+            'type': 'number',
+            'placeholder': '0.00',
+            'id': 'initial_weight',
+            'step': '0.01',
+            'min': '0',
+        })
+
+    )
+    price = forms.FloatField(
+        help_text='Цена всего, руб.',
+        widget=forms.TextInput(attrs={
+            'type': 'number',
+            'placeholder': '0.0',
+            'id': 'price',
+            'step': '0.1',
+            'min': '0',
+        })
+
+    )
+    certificate = forms.CharField(
+        help_text='№ Сертификата',
+        widget=forms.TextInput(attrs={
+            'type': 'text',
+            'placeholder': 'Например: CERT-2023-001',
+            'id': 'certificate',
+            'required': 'required',
+        })
+    )
+    melting = forms.CharField(
+        help_text='№ Плавки',
+        widget=forms.TextInput(attrs={
+            'type': 'text',
+            'placeholder': 'Например: PL-230512',
+            'id': 'melting',
+            'required': 'required',
+        })
+    )
+    batch = forms.CharField(
+        help_text='№ Партии',
+        widget=forms.TextInput(attrs={
+            'type': 'text',
+            'placeholder': 'Например: P-2023-0456',
+            'id': 'batch',
+            'required': 'required',
+        })
+    )
+    place = forms.CharField(
+        help_text='Место',
+        widget=forms.TextInput(attrs={
+            'type': 'text',
+            'placeholder': 'Например: Секция А, Стеллаж 3',
+            'id': 'place',
+            'required': 'required',
+        })
+    )
 
     def clean_id(self):
         data = self.cleaned_data['stamp']

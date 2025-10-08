@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-from .forms import AddMaterial, MaterialStamp, DeleteStamp
+from .forms import AddMaterial, MaterialStamp, DeleteStamp, EditMaterial
 from .models import WarehouseMaterial, AllMaterials
 
 
@@ -33,6 +33,7 @@ def add_material(request):
             material.type = form.cleaned_data['type']
             material.size = form.cleaned_data['size']
             material.initial_weight = form.cleaned_data['initial_weight']
+            material.price = form.cleaned_data['price']
             material.actual_weight = form.cleaned_data['initial_weight']
             material.certificate = form.cleaned_data['certificate']
             material.melting = form.cleaned_data['melting']
@@ -44,6 +45,42 @@ def add_material(request):
         stamps = AllMaterials.objects.all()
         form = AddMaterial()
         return render(request, 'add_material.html', {'form':form, 'stamps':stamps})
+
+def edit_material(request, id):
+    material = get_object_or_404(WarehouseMaterial, pk=id)
+    if request.method == 'POST':
+        form = EditMaterial(request.POST)
+
+        # Заполнение данными из формы
+        if form.is_valid():
+            material.stamp = form.cleaned_data['stamp']
+            material.type = form.cleaned_data['type']
+            material.size = form.cleaned_data['size']
+            material.initial_weight = form.cleaned_data['initial_weight']
+            material.price = form.cleaned_data['price']
+            material.actual_weight = form.cleaned_data['actual_weight']
+            material.certificate = form.cleaned_data['certificate']
+            material.melting = form.cleaned_data['melting']
+            material.batch = form.cleaned_data['batch']
+            material.place = form.cleaned_data['place']
+            material.save()
+        return HttpResponseRedirect(reverse('warehouse_material'))
+    else:
+        initial_data = {
+            'stamp': material.stamp,
+            'type': str(material.type),
+            'size': material.size,
+            'initial_weight': material.initial_weight,
+            'actual_weight': material.actual_weight,
+            'price': material.price,
+            'certificate': material.certificate,
+            'melting': material.melting,
+            'batch': material.batch,
+            'place': material.place,
+        }
+        form = EditMaterial(initial=initial_data)
+
+    return render(request, 'edit_material.html', {'form': form})
 
 def add_stamp(request):
     if request.method == 'POST':
@@ -87,7 +124,7 @@ def edit_stamp(request, stamp):
                 stamp.description = form.cleaned_data['description']
 
                 stamp.save()
-            return HttpResponseRedirect(reverse('warehouse_material'))
+            return HttpResponseRedirect(reverse('add_stamp'))
     else:
         stamp = get_object_or_404(AllMaterials, pk=stamp)
         storage = WarehouseMaterial.objects.filter(stamp=stamp)
@@ -111,6 +148,7 @@ def edit_stamp(request, stamp):
         form = MaterialStamp(initial=initial_data)
         form_del = DeleteStamp()
     return render(request, 'edit_stamp.html', {'form':form, 'form_del':form_del, 'stamp':stamp, 'weight':weight, 'quantity_off':quantity_off, 'quantity_on': quantity_on})
+
 
 def add_shape(request):
     context = {

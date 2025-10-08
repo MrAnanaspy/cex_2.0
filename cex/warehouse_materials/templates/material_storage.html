@@ -585,7 +585,7 @@
                             <td>{{ material.certificate }}</td>
                             <td>
                                 <div class="material-actions">
-                                    <button class="btn btn-primary btn-small">Изменить</button>
+                                    <a href="/material/edit/{{material.pk}}" class="btn btn-primary btn-small">Изменить</a>
                                 </div>
                             </td>
                         </tr>
@@ -813,8 +813,6 @@
             });
             
             // Кнопки "Изменить" и "Заказать"
-            const editButtons = document.querySelectorAll('.btn-primary');
-            const orderButtons = document.querySelectorAll('.btn-success');
             
             editButtons.forEach(button => {
                 if (!button.closest('.controls-content')) {
