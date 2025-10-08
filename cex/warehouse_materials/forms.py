@@ -121,6 +121,23 @@ class AddMaterial(forms.Form):
 
         return data
 
+    def clean_type(self):
+        type_value = self.cleaned_data['type']
+        match type_value:
+            case 'sheet':
+                type_value = "Лист"
+            case 'rod':
+                type_value = "Пруток (круг)"
+            case 'tube':
+                type_value = "Труба"
+            case 'profile':
+                type_value = "Профиль"
+            case 'wire':
+                type_value = "Проволока"
+            case 'angle':
+                type_value = "Уголок"
+        return type_value
+
 class EditMaterial(forms.Form):
     stamp = forms.ModelChoiceField(
         queryset=AllMaterials.objects.all(),
@@ -301,3 +318,33 @@ class DeleteStamp(forms.Form):
             raise ValidationError(_('Invalid date - не верно написано удалить'))
         else:
             return True
+
+
+class AddType(forms.Form):
+    name = forms.CharField(
+        help_text='Название',
+        widget=forms.TextInput(attrs={
+            'type': 'text',
+            'placeholder': 'Введите название категории',
+            'id': 'categoryName',
+            'required': 'required',
+        })
+    )
+
+    parent = forms.ModelChoiceField(
+        queryset=MaterialCategory.objects.all(),
+        empty_label="Выбери",
+        required=False,
+    )
+
+
+class DeleteType(forms.Form):
+    del_name = forms.CharField(
+        help_text='Название',
+        widget=forms.TextInput(attrs={
+            'type': 'text',
+            'placeholder': 'Введите название категории',
+            'id': 'categoryName',
+            'required': 'required',
+        })
+    )

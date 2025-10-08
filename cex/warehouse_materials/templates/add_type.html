@@ -511,145 +511,60 @@
             <div class="form-container">
                 <h2 class="section-title" id="formTitle">Создать категорию</h2>
                 
-                <form id="categoryForm">
+                <form id="categoryForm" method="post">
+                    {% csrf_token %}
                     <div class="form-group">
                         <label for="categoryName" class="required">Название категории</label>
-                        <input type="text" id="categoryName" placeholder="Например: Металлы">
+                        {{form.name}}
                         <div class="form-error" id="nameError">Пожалуйста, введите название категории</div>
                     </div>
                     
                     <div class="form-group">
                         <label for="parentCategory">Родительская категория</label>
-                        <select id="parentCategory">
-                            <option value="">Без родительской категории</option>
-                            <option value="1">Металлы</option>
-                            <option value="2">Пластики</option>
-                            <option value="3">Композиты</option>
-                        </select>
+                        {{form.parent}}
                         <div class="form-hint">Выберите родительскую категорию, если нужно создать подкатегорию</div>
                     </div>
                     
                     <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" id="cancelBtn">Отмена</button>
-                        <button type="submit" class="btn btn-success">Создать категорию</button>
+                        <a href="/" type="button" class="btn btn-secondary" id="cancelBtn">Отмена</a>
+                        <input type="submit" class="btn btn-success" value="Создать категорию">
                     </div>
                 </form>
             </div>
             
             <div class="categories-container">
                 <h2 class="section-title">Существующие категории</h2>
-                
+
                 <div class="categories-tree" id="categoriesTree">
+
                     <div class="category-item">
+                         {% load mptt_tags %}
+                {% recursetree types %}
+                        <br>
                         <div class="category-header">
-                            <div class="category-name">Металлы</div>
+                            <div class="category-name">{{ node.name }}</div>
                             <div class="category-actions">
                                 <button class="btn btn-primary btn-small edit-btn">Изменить</button>
-                                <button class="btn btn-danger btn-small delete-btn">Удалить</button>
+                                 <form method="post">
+                                {% csrf_token %}
+                                <button class="btn btn-danger btn-small delete-btn" name="action_del" value="{{node.name}}">Удалить</button>
+                                 </form>
                             </div>
                         </div>
+                        {% if not node.is_leaf_node %}
                         <div class="subcategories">
                             <div class="subcategory-item">
-                                <div class="category-header">
-                                    <div class="category-name">Цветные металлы</div>
-                                    <div class="category-actions">
-                                        <button class="btn btn-primary btn-small edit-btn">Изменить</button>
-                                        <button class="btn btn-danger btn-small delete-btn">Удалить</button>
-                                    </div>
-                                </div>
-                                <div class="subcategories">
-                                    <div class="subcategory-item">
-                                        <div class="category-header">
-                                            <div class="category-name">Алюминий</div>
-                                            <div class="category-actions">
-                                                <button class="btn btn-primary btn-small edit-btn">Изменить</button>
-                                                <button class="btn btn-danger btn-small delete-btn">Удалить</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="subcategory-item">
-                                        <div class="category-header">
-                                            <div class="category-name">Медь</div>
-                                            <div class="category-actions">
-                                                <button class="btn btn-primary btn-small edit-btn">Изменить</button>
-                                                <button class="btn btn-danger btn-small delete-btn">Удалить</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subcategory-item">
-                                <div class="category-header">
-                                    <div class="category-name">Черные металлы</div>
-                                    <div class="category-actions">
-                                        <button class="btn btn-primary btn-small edit-btn">Изменить</button>
-                                        <button class="btn btn-danger btn-small delete-btn">Удалить</button>
-                                    </div>
-                                </div>
-                                <div class="subcategories">
-                                    <div class="subcategory-item">
-                                        <div class="category-header">
-                                            <div class="category-name">Сталь</div>
-                                            <div class="category-actions">
-                                                <button class="btn btn-primary btn-small edit-btn">Изменить</button>
-                                                <button class="btn btn-danger btn-small delete-btn">Удалить</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="subcategory-item">
-                                        <div class="category-header">
-                                            <div class="category-name">Чугун</div>
-                                            <div class="category-actions">
-                                                <button class="btn btn-primary btn-small edit-btn">Изменить</button>
-                                                <button class="btn btn-danger btn-small delete-btn">Удалить</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
+                                    <div class="category-name">{{ children }}</div>
+
                             </div>
                         </div>
+                         {% endif %}
+                        {% endrecursetree %}
                     </div>
-                    
-                    <div class="category-item">
-                        <div class="category-header">
-                            <div class="category-name">Пластики</div>
-                            <div class="category-actions">
-                                <button class="btn btn-primary btn-small edit-btn">Изменить</button>
-                                <button class="btn btn-danger btn-small delete-btn">Удалить</button>
-                            </div>
-                        </div>
-                        <div class="subcategories">
-                            <div class="subcategory-item">
-                                <div class="category-header">
-                                    <div class="category-name">Термопласты</div>
-                                    <div class="category-actions">
-                                        <button class="btn btn-primary btn-small edit-btn">Изменить</button>
-                                        <button class="btn btn-danger btn-small delete-btn">Удалить</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subcategory-item">
-                                <div class="category-header">
-                                    <div class="category-name">Реактопласты</div>
-                                    <div class="category-actions">
-                                        <button class="btn btn-primary btn-small edit-btn">Изменить</button>
-                                        <button class="btn btn-danger btn-small delete-btn">Удалить</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="category-item">
-                        <div class="category-header">
-                            <div class="category-name">Композиты</div>
-                            <div class="category-actions">
-                                <button class="btn btn-primary btn-small edit-btn">Изменить</button>
-                                <button class="btn btn-danger btn-small delete-btn">Удалить</button>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
+
                 
                 <div class="empty-state" id="emptyState" style="display: none;">
                     <i>📁</i>
@@ -722,20 +637,7 @@
             }
             
             // Функция проверки обязательных полей
-            function validateField(fieldId, errorId) {
-                const field = document.getElementById(fieldId);
-                const error = document.getElementById(errorId);
-                
-                if (!field.value.trim()) {
-                    field.classList.add('error');
-                    error.style.display = 'block';
-                    return false;
-                } else {
-                    field.classList.remove('error');
-                    error.style.display = 'none';
-                    return true;
-                }
-            }
+
             
             // Функция сброса формы
             function resetForm() {
@@ -748,33 +650,11 @@
             
             // Обработчик отправки формы
             form.addEventListener('submit', function(e) {
+                if !(isNameValid) {
                 e.preventDefault();
-                
-                // Валидация полей
-                const isNameValid = validateField('categoryName', 'nameError');
-                
-                // Если все поля валидны
-                if (isNameValid) {
-                    // В реальном приложении здесь будет отправка данных на сервер
-                    
-                    // Показываем сообщение об успехе
-                    successMessage.style.display = 'block';
-                    errorMessage.style.display = 'none';
-                    
-                    // Прокручиваем к сообщению
-                    successMessage.scrollIntoView({ behavior: 'smooth' });
-                    
-                    // Сбрасываем форму
-                    resetForm();
-                    
-                    // Обновляем список категорий (в реальном приложении - запрос к серверу)
-                    updateCategoriesList();
-                } else {
-                    errorMessage.style.display = 'block';
-                    successMessage.style.display = 'none';
                 }
-            });
-            
+                // Валидация полей
+
             // Обработчик кнопки отмены
             cancelBtn.addEventListener('click', function() {
                 if (confirm('Вы уверены, что хотите отменить создание категории? Все несохраненные данные будут потеряны.')) {
@@ -783,54 +663,9 @@
             });
             
             // Обработчики кнопок редактирования
-            document.querySelectorAll('.edit-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    let categoryName;
-                    
-                    // Получаем имя категории
-                    if (this.closest('.category-item')) {
-                        categoryName = this.closest('.category-item').querySelector('.category-name').textContent;
-                    } else if (this.closest('.subcategory-item')) {
-                        categoryName = this.closest('.subcategory-item').querySelector('.category-name').textContent;
-                    }
-                    
-                    // Заполняем форму данными
-                    document.getElementById('categoryName').value = categoryName;
-                    
-                    // В реальном приложении здесь будет определение родительской категории
-                    
-                    // Прокручиваем к форме
-                    document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
-                    
-                    alert(`Режим редактирования категории "${categoryName}". В реальном приложении здесь будет полная функциональность редактирования.`);
-                });
-            });
+
             
             // Обработчики кнопок удаления
-            document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    let categoryName;
-                    
-                    // Получаем имя категории
-                    if (this.closest('.category-item')) {
-                        categoryName = this.closest('.category-item').querySelector('.category-name').textContent;
-                    } else if (this.closest('.subcategory-item')) {
-                        categoryName = this.closest('.subcategory-item').querySelector('.category-name').textContent;
-                    }
-                    
-                    if (confirm(`Вы уверены, что хотите удалить категорию "${categoryName}"? Все подкатегории также будут удалены.`)) {
-                        // В реальном приложении здесь будет запрос на удаление к серверу
-                        
-                        // Показываем сообщение об успехе
-                        successMessage.textContent = `Категория "${categoryName}" успешно удалена!`;
-                        successMessage.style.display = 'block';
-                        errorMessage.style.display = 'none';
-                        
-                        // Обновляем список категорий (в реальном приложении - запрос к серверу)
-                        updateCategoriesList();
-                    }
-                });
-            });
             
             // Функция обновления списка категорий (заглушка)
             function updateCategoriesList() {

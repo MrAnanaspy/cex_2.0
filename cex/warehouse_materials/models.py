@@ -8,7 +8,7 @@ from branch.models import Branch
 
 # Create your models here.
 class MaterialCategory(MPTTModel):
-    parent = TreeForeignKey('self', on_delete=models.PROTECT, null=True, blank=True, related_name='children',
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children',
                             db_index=True, verbose_name='Родительская категория')
     slug = models.SlugField()
     name = models.CharField(max_length=50, verbose_name='Категория материала', primary_key=True)
@@ -26,7 +26,7 @@ class MaterialCategory(MPTTModel):
 
 class AllMaterials(models.Model):
     stamp = models.CharField(max_length=50, verbose_name='Марка материала', primary_key=True)
-    type = models.ForeignKey(MaterialCategory, on_delete=models.CASCADE, verbose_name='Категория')
+    type = models.ForeignKey(MaterialCategory, on_delete=models.SET_NULL, verbose_name='Категория', null=True, blank=True)
     density = models.FloatField(verbose_name='Плотность материала', default=0)
     description = TextField(verbose_name='Описание', null=True, blank=True)
 
@@ -39,7 +39,7 @@ class AllMaterials(models.Model):
 
 
 class WarehouseMaterial(models.Model):
-    stamp = models.ForeignKey(AllMaterials, on_delete=models.CASCADE, verbose_name='Марка материала', null=True,
+    stamp = models.ForeignKey(AllMaterials, on_delete=models.SET_NULL, verbose_name='Марка материала', null=True,
                               blank=True)
     type = models.CharField(max_length=50, verbose_name='Форма', null=True, blank=True)
     size = models.CharField(max_length=50, verbose_name='Размер', null=True, blank=True)

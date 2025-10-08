@@ -7,5 +7,6 @@ urlpatterns = [
     path('material/edit/<int:id>', views.edit_material, name='edit_material'),
     path('add_stamp/', views.add_stamp, name='add_stamp'),
     path('edit_stamp/<str:stamp>', views.edit_stamp, name='edit_stamp'),
+    path('add_type/', views.add_type, name='add_type'),
 
 ]

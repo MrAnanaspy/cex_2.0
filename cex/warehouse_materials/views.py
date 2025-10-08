@@ -1,8 +1,8 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-from .forms import AddMaterial, MaterialStamp, DeleteStamp, EditMaterial
-from .models import WarehouseMaterial, AllMaterials
+from .forms import AddMaterial, MaterialStamp, DeleteStamp, EditMaterial, AddType, DeleteType
+from .models import WarehouseMaterial, AllMaterials, MaterialCategory
 
 
 def index(request):
@@ -103,7 +103,6 @@ def add_stamp(request):
 
 def edit_stamp(request, stamp):
     if request.method == 'POST':
-        print(request.POST)
         if 'confirmation' in request.POST:
             form = DeleteStamp(request.POST)
 
@@ -149,6 +148,28 @@ def edit_stamp(request, stamp):
         form_del = DeleteStamp()
     return render(request, 'edit_stamp.html', {'form':form, 'form_del':form_del, 'stamp':stamp, 'weight':weight, 'quantity_off':quantity_off, 'quantity_on': quantity_on})
 
+
+def add_type(request):
+    if request.method == 'POST':
+        print(request.POST)
+        if 'action_del' in request.POST:
+            category = get_object_or_404(MaterialCategory, pk=request.POST.get('action_del'))
+            print(category)
+            category.delete()
+            return HttpResponseRedirect(reverse('add_type'))
+        else:
+            form = AddType(request.POST)
+            category = MaterialCategory()
+
+            if form.is_valid():
+                category.name = form.cleaned_data['name']
+                category.parent = form.cleaned_data['parent']
+                category.save()
+            return HttpResponseRedirect(reverse('add_type'))
+    else:
+        types = MaterialCategory.objects.all()
+        form = AddType()
+        return render(request, 'add_type.html', {'types': types, 'form': form})
 
 def add_shape(request):
     context = {
