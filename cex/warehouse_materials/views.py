@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -13,9 +14,45 @@ def index(request):
 
 def warehouse_material(request):
     if request.method == 'GET':
+
         materials = WarehouseMaterial.objects.all()
+        stamps = AllMaterials.objects.all()
+        type_material = MaterialCategory.objects.all()
+        statuses = ['on', 'no', 'little', 'many']
+
+        stamp = request.GET.get('stamp')
+        type_form = request.GET.get('type_form')
+        status = request.GET.get('status')
+        search = request.GET.get('search')
+
+        if stamp:
+            materials = materials.filter(stamp=stamp)
+
+        if type_form:
+            materials = materials.filter(stamp__type__name=type_form)
+
+        if status:
+            print(status)
+            match status:
+                case 'no':
+                    materials = materials.filter(actual_weight=0)
+                case 'on':
+                    materials = materials.filter(actual_weight__gt=0)
+
+        if search:
+            materials = materials.filter(Q(stamp__stamp__icontains=search) | Q(type__icontains=search))
+
+
+
+
         form = AddMaterial()
-        return render(request, 'material_storage.html', {'materials':materials, 'form':form})
+        return render(request, 'material_storage.html', {
+            'materials':materials,
+            'form':form,
+            'stamps': stamps,
+            'types': type_material,
+            'statuses':statuses,
+        })
 
     if request.method == 'POST':
         pass

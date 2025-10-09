@@ -503,32 +503,41 @@
     <section class="controls">
         <div class="container">
             <div class="controls-content">
+                <form method="get" class="filter-form">
                 <div class="search-box">
-                    <input type="text" placeholder="Поиск материалов...">
-                    <button>Найти</button>
+                    <input type="text" name="search" placeholder="Поиск..."
+                            value="{{ request.GET.search }}">
                 </div>
                 <div class="filters">
-                    <select>
-                        <option>Все марки</option>
-                        <option>Алюминий 6061</option>
-                        <option>Сталь 304</option>
-                        <option>Латунь</option>
-                        <option>Поликарбонат</option>
+                    <select name="stamp">
+                        <option value="">Все категории</option>
+                        {% for stamp_one in stamps %}
+                        <option value="{{stamp_one}}" {% if request.GET.stamp == stamp_one.stamp %} selected {% endif %}>
+                            {{stamp_one}}
+                        </option>
+                        {% endfor %}
                     </select>
-                    <select>
-                        <option>Все формы</option>
-                        <option>Лист</option>
-                        <option>Пруток</option>
-                        <option>Труба</option>
-                        <option>Профиль</option>
+                     <select name="type_form">
+                        <option value="">Все типы материалов</option>
+                        {% for type_one in types %}
+                        <option value="{{type_one}}" {% if request.GET.type_form == type_one.name %}selected{% endif %}>
+                            {{type_one}}
+                        </option>
+                        {% endfor %}
                     </select>
-                    <select>
-                        <option>Все статусы</option>
-                        <option>В наличии</option>
-                        <option>Мало</option>
-                        <option>Нет в наличии</option>
+                    <select name="status">
+                        <option value="">Все типы материалов</option>
+                        <option value="no" {% if request.GET.status == "no" %}selected{% endif %}>
+                        Нет в наличии
+                        </option>
+                        <option value="on" {% if request.GET.status == "on" %}selected{% endif %}>
+                        В наличии
+                        </option>
+
                     </select>
+                        <button type="submit" name="sort" value="sort">Фильтровать</button>
                 </div>
+                    </form>
                 <div class="dropdown">
                  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
     </button>
