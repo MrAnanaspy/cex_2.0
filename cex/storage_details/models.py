@@ -1,4 +1,4 @@
-'''from django.db import models
+from django.db import models
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from django.urls import reverse
@@ -129,4 +129,3 @@ class Specification(MPTTModel):
     class Meta:
         db_table = "Specification"
         verbose_name_plural = 'Спецификация'
-'''

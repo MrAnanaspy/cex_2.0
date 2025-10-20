@@ -1,14 +1,14 @@
-'''from django.contrib import admin
+from django.contrib import admin
 from django.utils.html import format_html
 from django.dispatch import receiver
 from mptt.admin import MPTTModelAdmin
 
-from .models import Detail
+from .models import *
 
 
 # Register your models here.
 @admin.register(Detail)
-class DetailAdmin(MPTTModelAdmin):
+class DetailAdmin(admin.ModelAdmin):
     list_display = ('EAM', 'name',)
 
     prepopulated_fields = {"slug": ("EAM",)}
@@ -18,4 +18,19 @@ class DetailAdmin(MPTTModelAdmin):
     image_tag.short_description = 'Фото/Рендер'
     image_tag.allow_tags = True
 
-'''
+
+@admin.register(MultiplierDetail)
+class DetailAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(MultiplierStandardProducts)
+class DetailAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(MultiplierPurchasedPproducts)
+class DetailAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(Specification)
+class DetailAdmin(MPTTModelAdmin):
+    pass
