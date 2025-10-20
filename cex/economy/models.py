@@ -1,4 +1,4 @@
-'''from django.db import models
+from django.db import models
 
 # Create your models here.
 class Expenses(models.Model):
@@ -8,7 +8,7 @@ class Expenses(models.Model):
     tool = models.FloatField(max_length=30, verbose_name='Затраты на инструмент, ₽', default=0)
     material_machine = models.FloatField(max_length=30, verbose_name='Материал для содержания оборудоания, ₽', default=0)
     repair = models.FloatField(max_length=30, verbose_name='Работы по ремонту и обслуживанию оборудования, ₽',default=0)
-    oil = models.FloatField(max_length=30, verbose_name='Дециентрализованные масла и смазки, ₽', default=0)
+    oil = models.FloatField(max_length=30, verbose_name='Децентрализованные масла и смазки, ₽', default=0)
     workwear = models.FloatField(max_length=30, verbose_name='Спецодежда, ₽', default=0)
     electricity = models.FloatField(max_length=30, verbose_name='Затраты на электроэнергию, ₽', default=0)
     depreciation = models.FloatField(max_length=30, verbose_name='Амортизация, ₽', default=0)
@@ -20,6 +20,29 @@ class Expenses(models.Model):
     class Meta:
         db_table = "Expenses"
         verbose_name_plural = 'Расходы на месяц'
+
+
+class PriceArchive (models.Model):
+    time = models.DateField(verbose_name='Месяц')
+    material = models.FloatField(max_length=30, verbose_name='Сырье и материалы, ₽', default=0)
+    fot = models.FloatField(max_length=30, verbose_name='ФОТ, ₽', default=0)
+    tool = models.FloatField(max_length=30, verbose_name='Затраты на инструмент, ₽', default=0)
+    material_machine = models.FloatField(max_length=30, verbose_name='Материал для содержания оборудоания, ₽',
+                                         default=0)
+    repair = models.FloatField(max_length=30, verbose_name='Работы по ремонту и обслуживанию оборудования, ₽',
+                               default=0)
+    oil = models.FloatField(max_length=30, verbose_name='Децентрализованные масла и смазки, ₽', default=0)
+    workwear = models.FloatField(max_length=30, verbose_name='Спецодежда, ₽', default=0)
+    electricity = models.FloatField(max_length=30, verbose_name='Затраты на электроэнергию, ₽', default=0)
+    depreciation = models.FloatField(max_length=30, verbose_name='Амортизация, ₽', default=0)
+    comment = models.TextField(verbose_name='Комментарий', null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.time}"
+
+    class Meta:
+        db_table = "PriceArchive"
+        verbose_name_plural = 'Архиф цен'
 
 
 class Analog (models.Model):
@@ -41,6 +64,8 @@ class WAP (models.Model):
     price = models.FloatField(max_length=30, verbose_name='Стоимость, ₽', default=0)
     analog= models.ForeignKey(Analog, on_delete=models.CASCADE, verbose_name='Аналог', null=True,
                                     blank=True)
+    price_archive = models.ForeignKey(PriceArchive, on_delete=models.CASCADE, verbose_name='Архив цен', null=True,
+                               blank=True)
     comment = models.TextField(verbose_name='Комментарий', null=True, blank=True)
 
     def __str__(self):
@@ -50,13 +75,3 @@ class WAP (models.Model):
         db_table = "WAP"
         verbose_name_plural = 'СВЦ'
 
-class PriceArchive (models.Model):
-    wap = models.ForeignKey(WAP, on_delete=models.CASCADE, verbose_name='СВЦ')
-    comment = models.TextField(verbose_name='Комментарий', null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.wap}"
-
-    class Meta:
-        db_table = "PriceArchive"
-        verbose_name_plural = 'Архиф цен' '''
