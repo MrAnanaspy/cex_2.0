@@ -1,8 +1,8 @@
-'''from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group
 from django.db import models
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
-from storage_details.models import Detail
+from storage_details.models import Detail, Specification
 from warehouse_materials.models import WarehouseMaterial, WarehouseMaterial3D
 from economy.models import PriceArchive
 from branch.models import Branch
@@ -149,6 +149,13 @@ class Act(models.Model):
 class MSK(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, verbose_name='Задача', null=True, blank=True)
     act = models.ForeignKey(Act, on_delete=models.CASCADE, verbose_name='Задача', null=True, blank=True)
+    quantity = models.IntegerField(verbose_name='Кол-во', default=0)
+    detail = models.ForeignKey(Specification, on_delete=models.CASCADE, verbose_name='Деталь', null=True, blank=True)
+    print = models.BooleanField(verbose_name='Использование 3Д', default=False)
+    material = models.ForeignKey(WarehouseMaterial, on_delete=models.CASCADE, verbose_name='Материал', null=True,
+                                 blank=True)
+    material_3d = models.ForeignKey(WarehouseMaterial3D, on_delete=models.CASCADE, verbose_name='Материал 3д',
+                                    null=True, blank=True)
     date_start = models.DateField(verbose_name='Дата выполнения', null=True, blank=True)
     date_end = models.DateField(verbose_name='Дата выполнения', null=True, blank=True)
 
@@ -169,20 +176,17 @@ class Application(models.Model):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name='Филиал', null=True, blank=True, related_name = 'branch')
     task = models.TextField(verbose_name='Задача к разработке', null=True, blank=True)
     quantity = models.IntegerField( verbose_name='Кол-во', default=0)
-    date_create = models.DateField(verbose_name='Время создания')
-    date_start = models.DateField( verbose_name='Время начала', null=True, blank=True)
-    date_end = models.DateField( verbose_name='Время окончания', null=True, blank=True)
-    print = models.BooleanField( verbose_name='Использование 3Д',default=False)
-    branch_work = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name='Марка материала', null=True, blank=True)
+    date_create = models.DateField(verbose_name='Дата создания')
+    date_start = models.DateField( verbose_name='Дата начала', null=True, blank=True)
+    date_end = models.DateField( verbose_name='Дата окончания', null=True, blank=True)
+    branch_work = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name='Филтал выполнения', null=True, blank=True)
     weight_work_piece = models.FloatField(verbose_name='Вес заготовки, Кг', default=0)
     urgency = models.IntegerField(choices=URGENCY, verbose_name='Срочность', default=3)
     msk = models.ForeignKey(MSK, on_delete=models.CASCADE, verbose_name='МСК', null=True, blank=True)
-    detail = models.ForeignKey(Detail, on_delete=models.CASCADE, verbose_name='Деталь', null=True, blank=True)
+    specification = models.ForeignKey(Specification, on_delete=models.CASCADE, verbose_name='Спецификация', null=True, blank=True)
     client = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Заказчик', null=True, blank=True)
     work_engineer = models.ForeignKey(EngineerWork, on_delete=models.CASCADE, verbose_name='Работа инженера-конструктора', null=True, blank=True)
     work_technologist = models.ForeignKey(TechnologistWork, on_delete=models.CASCADE, verbose_name='Работа технолога', null=True, blank=True)
-    material = models.ForeignKey(WarehouseMaterial, on_delete=models.CASCADE, verbose_name='Материал', null=True, blank=True)
-    material_3d = models.ForeignKey(WarehouseMaterial3D, on_delete=models.CASCADE, verbose_name='Материал 3д', null=True, blank=True)
     price_archive = models.ForeignKey(PriceArchive, on_delete=models.CASCADE, verbose_name='Архиф стоимости ', null=True, blank=True)
     comment = models.TextField(verbose_name='Комментарий', null=True, blank=True)
 
@@ -192,4 +196,3 @@ class Application(models.Model):
     class Meta:
         db_table = "Application"
         verbose_name_plural = 'Заявка'
-'''

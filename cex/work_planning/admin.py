@@ -1,13 +1,8 @@
-'''from django.contrib import admin
+from django.contrib import admin
 from mptt.admin import MPTTModelAdmin
 
 from .models import *
 
-
-# Register your models here.
-@admin.register(Branch)
-class DetailAdmin(admin.ModelAdmin):
-    pass
 
 @admin.register(Signature)
 class DetailAdmin(admin.ModelAdmin):
@@ -48,4 +43,4 @@ class DetailAdmin(admin.ModelAdmin):
 
 @admin.register(Application)
 class DetailAdmin(admin.ModelAdmin):
-    pass'''
+    pass
