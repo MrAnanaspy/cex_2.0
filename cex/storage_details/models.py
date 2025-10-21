@@ -2,7 +2,7 @@ from django.db import models
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from django.urls import reverse
-from warehouse_materials.models import AllMaterials, ShapeMaterials
+from warehouse_materials.models import AllMaterials
 
 # Create your models here.
 def image_directory_path(instance, filename):
@@ -23,7 +23,7 @@ class Detail(models.Model):
     division = models.CharField(max_length=50, choices=DIVISION, verbose_name='Подразделение', null=True,
                                            blank=True)
     mater = models.ForeignKey(AllMaterials, on_delete=models.CASCADE, verbose_name='Марка материала', null=True, blank=True)
-    shape_mater = models.ForeignKey(ShapeMaterials, on_delete=models.CASCADE, verbose_name='Форма материла', null=True, blank=True)
+    size_mater = (models.CharField(max_length=100, verbose_name='Размер', null=True, blank=True))
     billet_weight = (models.CharField
                 (max_length=100, verbose_name='Вес заготовки', null=True, blank=True))
     photo = (models.ImageField
@@ -73,22 +73,22 @@ class MultiplierDetail(models.Model):
 
 
 class MultiplierStandardProducts(models.Model):
-    multiplier = models.IntegerField(verbose_name='Множитель', default=1)
+    multiplier_standart = models.IntegerField(verbose_name='Множитель', default=1)
     name = models.CharField(max_length=100, verbose_name='Наименование', null=True, blank=True)
 
     def __str__(self):
-        return f"{self.multiplier} - {self.name}"
+        return f"{self.multiplier_standart} - {self.name}"
 
     class Meta:
         db_table = "MultiplierStandardProducts"
         verbose_name_plural = 'Множитель стандартных деталей'
 
 class MultiplierPurchasedPproducts(models.Model):
-    multiplier = models.IntegerField(verbose_name='Множитель', default=1)
+    multiplier_purchased = models.IntegerField(verbose_name='Множитель', default=1)
     name = models.CharField(max_length=100, verbose_name='Наименование', null=True, blank=True)
 
     def __str__(self):
-        return f"{self.multiplier} - {self.name}"
+        return f"{self.multiplier_purchased} - {self.name}"
 
     class Meta:
         db_table = "MultiplierPurchasedPproducts"
@@ -109,9 +109,9 @@ class Specification(MPTTModel):
     EAM = (models.CharField(max_length=20, null=True, blank=True))
     name = (models.CharField(max_length=100, verbose_name='Название', null=True, blank=True))
     division = models.CharField(max_length=50, choices=DIVISION, verbose_name='Подразделение', null=True, blank=True)
-    multiplier_detail = models.ForeignKey(MultiplierDetail, on_delete=models.CASCADE, verbose_name='Множитель детали', null=True, blank=True, related_name = 'multiplier')
-    multiplier_standard_products = models.ForeignKey(MultiplierStandardProducts, on_delete=models.CASCADE, verbose_name='Множитель стандартных деталей', null=True,blank=True, related_name='multiplier')
-    multiplier_purchased_products = models.ForeignKey(MultiplierPurchasedPproducts, on_delete=models.CASCADE, verbose_name='Множитель заказных деталей', null=True,blank=True, related_name='multiplier')
+    multiplier_detail = models.ForeignKey(MultiplierDetail, on_delete=models.CASCADE, verbose_name='Множитель детали', null=True, blank=True, related_name = 'multiplier_detail')
+    multiplier_standard_products = models.ForeignKey(MultiplierStandardProducts, on_delete=models.CASCADE, verbose_name='Множитель стандартных деталей', null=True,blank=True, related_name='multiplier_standard_products')
+    multiplier_purchased_products = models.ForeignKey(MultiplierPurchasedPproducts, on_delete=models.CASCADE, verbose_name='Множитель заказных деталей', null=True,blank=True, related_name='multiplier_purchased_products')
     photo = (models.ImageField
              (max_length=260, verbose_name='Ссылка на фото', upload_to=image_directory_path, null=True, blank=True))
     build  = models.FloatField(max_length=30,

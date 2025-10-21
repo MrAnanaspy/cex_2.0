@@ -11,8 +11,6 @@ from .models import *
 class DetailAdmin(admin.ModelAdmin):
     list_display = ('EAM', 'name',)
 
-    prepopulated_fields = {"slug": ("EAM",)}
-
     def image_tag(self, obj):
             return format_html('<img src="{}" style="max-width:100px; max-height:100px"/>'.format(obj.photo.url))
     image_tag.short_description = 'Фото/Рендер'
