@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание спецификации - База запчастей</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --info-color: #17a2b8;
+            --border-radius: 6px;
+            --box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        .hidden {
+            display: none;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f5f7fa;
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: white;
+            color: var(--primary-color);
+            padding: 1.5rem 0;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: var(--dark-color);
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 15px;
+        }
+        
+        nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .specification-form {
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .parts-selection {
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            max-height: 800px;
+            overflow-y: auto;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e1e5e9;
+            border-radius: var(--border-radius);
+        }
+        
+        .form-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-color);
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .required::after {
+            content: " *";
+            color: var(--accent-color);
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .file-upload {
+            border: 2px dashed #e1e5e9;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .file-upload:hover {
+            border-color: var(--secondary-color);
+            background-color: #f8f9fa;
+        }
+        
+        .file-upload i {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+        
+        .file-list {
+            margin-top: 15px;
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            margin-bottom: 5px;
+        }
+        
+        .file-name {
+            flex: 1;
+            margin-right: 15px;
+        }
+        
+        .file-remove {
+            color: var(--accent-color);
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .search-section {
+            margin-bottom: 25px;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .search-box input {
+            flex: 1;
+        }
+        
+        .parts-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e1e5e9;
+            border-radius: var(--border-radius);
+        }
+        
+        .part-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #e1e5e9;
+            transition: var(--transition);
+        }
+        
+        .part-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .part-item:last-child {
+            border-bottom: none;
+        }
+
+        
+        .part-info {
+            flex: 1;
+        }
+        
+        .part-sku {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .part-name {
+            color: var(--dark-color);
+            font-size: 0.9rem;
+        }
+        
+        .selected-parts {
+            margin-top: 25px;
+        }
+        
+        .selected-parts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .selected-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e1e5e9;
+            border-radius: var(--border-radius);
+        }
+        
+        .selected-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #e1e5e9;
+            background: #f8f9fa;
+        }
+        
+        .selected-item:last-child {
+            border-bottom: none;
+        }
+        
+        .selected-item-info {
+            flex: 1;
+            margin-right: 15px;
+        }
+        
+        .coefficient-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .quantity-input, .coefficient-input {
+            width: 80px;
+            padding: 8px;
+            text-align: center;
+        }
+        
+        .remove-selected {
+            color: var(--accent-color);
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #219653;
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--secondary-color);
+            color: var(--secondary-color);
+        }
+        
+        .btn-outline:hover {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: var(--border-radius);
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: var(--success-color);
+        }
+        
+        .notification.error {
+            background: var(--accent-color);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin: 5px 0;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--dark-color);
+        }
+        
+        .coefficient-info {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .parent-category-info {
+            background-color: #e8f4fd;
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            margin-top: 10px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .parent-category-name {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .parts-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e1e5e9;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-weight: 600;
+            color: var(--dark-color);
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            color: var(--secondary-color);
+            border-bottom-color: var(--secondary-color);
+        }
+        
+        .tab:hover:not(.active) {
+            color: var(--primary-color);
+            background: #f8f9fa;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .custom-part-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+        
+        .custom-part-item {
+            background: white;
+            border: 1px solid #e1e5e9;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .custom-part-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .custom-part-title {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .part-type-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .badge-standard {
+            background: #e8f5e8;
+            color: var(--success-color);
+        }
+        
+        .badge-custom {
+            background: #fff3e0;
+            color: var(--warning-color);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease;
+        }
+        
+        /* УЛУЧШЕННЫЕ СТИЛИ ЧЕКБОКСОВ */
+        .form-check {
+            position: relative;
+            margin-bottom: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            user-select: none;
+            transition: var(--transition);
+            border-radius: var(--border-radius);
+            padding: 12px 15px 12px 50px;
+            background-color: #f8f9fa;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            min-height: 60px;
+        }
+
+        .form-check:hover {
+            background-color: #e8f4fd;
+            border-color: var(--secondary-color);
+        }
+
+        .form-check.selected {
+            background-color: #e8f4fd;
+            border-color: var(--secondary-color);
+        }
+
+        /* Скрываем стандартный чекбокс */
+        .form-check-input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        /* Кастомный чекбокс */
+        .checkmark {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            height: 22px;
+            width: 22px;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .form-check:hover .checkmark {
+            border-color: var(--secondary-color);
+        }
+
+        .form-check-input:checked ~ .checkmark {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .form-check-input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        /* Стили для выбранных элементов */
+        .form-check-input:checked ~ .form-check-label {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Улучшение отображения информации о деталях */
+        .part-info {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .part-sku {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .part-name {
+            color: var(--dark-color);
+            font-size: 0.9rem;
+        }
+
+        /* Стили для выбранных деталей */
+        .selected-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #e1e5e9;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            transition: var(--transition);
+        }
+
+        .selected-item:hover {
+            background: #e8f4fd;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .selected-item:last-child {
+            border-bottom: none;
+        }
+
+        .selected-item-info {
+            flex: 1;
+            margin-right: 15px;
+        }
+
+        /* Стили для поля количества */
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+        }
+
+        .quantity-input {
+            width: 80px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .quantity-input:disabled {
+            background-color: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        .quantity-input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .parts-selection {
+                max-height: 500px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            nav ul {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .coefficient-controls {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .quantity-input, .coefficient-input {
+                width: 60px;
+            }
+
+            .parts-tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+                border-bottom: 1px solid #e1e5e9;
+            }
+
+            .quantity-control {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .quantity-input {
+                width: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div>
+                    <h1>Создание спецификации</h1>
+                    <p class="subtitle">База запчастей "ТехноПром"</p>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="specifications.html">Спецификации</a></li>
+                        <li><a href="#" class="active">Создать</a></li>
+                        <li><a href="catalog.html">Каталог</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <form id="addMaterialForm" class="form-container" method="post">
+            {% csrf_token %}
+        <div class="main-content">
+            <div class="specification-form">
+                <div class="form-section">
+                    <h3>Основная информация</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="spec-number" class="required">Номер спецификации</label>
+                            {{form.EAM}}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="spec-name" class="required">Название спецификации</label>
+                            {{form.name}}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="spec-category">Категория</label>
+                            {{form.category}}
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="spec-description">Описание</label>
+                            {{form.description}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container">
+        <div class="form-section">
+            <h3>Прикрепленные файлы</h3>
+            <div class="file-upload" id="file-upload-area">
+                <div>📎</div>
+                <p>Перетащите файлы сюда или нажмите для выбора</p>
+                <small>Поддерживаемые форматы: PDF, DOC, DOCX, XLS, XLSX, DWG</small>
+                <input type="file" id="file-input" multiple style="display: none;">
+            </div>
+            <div class="file-list" id="file-list">
+                <div class="empty-state">Файлы не добавлены</div>
+            </div>
+            <button class="upload-button" id="upload-button" disabled>Загрузить файлы</button>
+        </div>
+    </div>
+
+                <div class="actions">
+                    <button name="create" class="btn-success">
+                        <span>✅</span> Создать спецификацию
+                    </button>
+                    <button id="cancel-btn" class="btn-outline">
+                        <span>❌</span> Отмена
+                    </button>
+                </div>
+            </div>
+
+            <div class="parts-selection">
+                <div class="parts-tabs">
+                    <button class="tab" data-tab="spec-parts" type="button" onclick="eamWithInput('specification')">Спецификации</button>
+                    <button type="button" onclick="eamWithInput('detail')" class="tab" data-tab="detail-parts">Детали</button>
+                    <button type="button" onclick="eamWithInput('standart')" class="tab" data-tab="standard-parts">Стандартные детали</button>
+                    <button type="button" onclick="eamWithInput('zakaz')" class="tab" data-tab="custom-parts">Заказные детали</button>
+                </div>
+
+                <!-- Вкладка Спецификаций -->
+                <div id="spec-parts" class="tab-content active" >
+                    <div class="search-section">
+                        <h3>Выбор связаных спецификаций</h3>
+
+                        <div class="search-box">
+                            <input type="text" id="specification-search" placeholder="Поиск по названию, артикулу или категории...">
+                            <button type="button" id="specification-btn" class="btn-primary">
+                                <span>🔍</span> Поиск
+                            </button>
+                        </div>
+
+                        <!-- Список спецификаций -->
+                        {% for checkbox in form.subcategories %}
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input subcategories"
+                                   id="{{ checkbox.id_for_label }}"
+                                   name="{{ checkbox.data.name }}"
+                                   value="{{ checkbox.data.value }}"
+                                   {% if checkbox.data.selected %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                            <div class="part-info">
+                                <div class="part-sku">{{ checkbox.choice_label }}</div>
+                                <div class="part-name">Описание спецификации</div>
+                            </div>
+                            <div class="quantity-control">
+                                <input type="number" class="quantity-input" min="1" value="1" disabled>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="selected-parts">
+                        <div class="selected-parts-header">
+                            <button id="clear-standard" class="btn-outline" style="padding: 8px 15px;">
+                                Очистить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вкладка деталей -->
+                <div  id="det-parts" class="tab-content hidden ">
+                    <div class="search-section">
+                        <h3>Выбор стандартных деталей</h3>
+
+                        <div class="search-box">
+                            <input type="text" id="part-search" placeholder="Поиск по названию, артикулу или категории...">
+                            <button type="button" id="search-btn" class="btn-primary">
+                                <span>🔍</span> Поиск
+                            </button>
+                        </div>
+
+                        <!-- Список деталей -->
+                        {% for checkbox in form.details %}
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input details"
+                                   id="{{ checkbox.id_for_label }}"
+                                   name="{{ checkbox.data.name }}"
+                                   value="{{ checkbox.data.value }}"
+                                   {% if checkbox.data.selected %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                            <div class="part-info">
+                                <div class="part-sku">{{ checkbox.choice_label }}</div>
+                                <div class="part-name">Описание детали</div>
+                            </div>
+                            <div class="quantity-control">
+                                <input type="number" class="quantity-input" min="1" value="1" disabled>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="selected-parts">
+                        <div class="selected-parts-header">
+                            <button id="clear-standard" class="btn-outline" style="padding: 8px 15px;">
+                                Очистить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вкладка стандартных деталей -->
+                <div  id="stand-det-parts" class="tab-content hidden" >
+                    <div class="search-section">
+                        <h3>Выбор стандартных деталей</h3>
+
+                        <div class="search-box">
+                            <input type="text" id="part-search" placeholder="Поиск по названию, артикулу или категории...">
+                            <button type="button" id="search-btn" class="btn-primary">
+                                <span>🔍</span> Поиск
+                            </button>
+                        </div>
+
+                        <!-- Список стандартных деталей -->
+                        {% for checkbox in form.standart_details %}
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input standart-details"
+                                   id="{{ checkbox.id_for_label }}"
+                                   name="{{ checkbox.data.name }}"
+                                   value="{{ checkbox.data.value }}"
+                                   {% if checkbox.data.selected %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                            <div class="part-info">
+                                <div class="part-sku">{{ checkbox.choice_label }}</div>
+                                <div class="part-name">Описание детали</div>
+                            </div>
+                            <div class="quantity-control">
+                                <input type="number" class="quantity-input" min="1" value="1" disabled>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="selected-parts">
+                        <div class="selected-parts-header">
+                            <button id="clear-standard" class="btn-outline" style="padding: 8px 15px;">
+                                Очистить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вкладка заказных деталей -->
+                <div  id="zakaz-det-parts" class="tab-content hidden" >
+                    <div class="search-section">
+                        <h3>Выбор стандартных деталей</h3>
+
+                        <div class="search-box">
+                            <input type="text" id="part-search" placeholder="Поиск по названию, артикулу или категории...">
+                            <button type="button" id="search-btn" class="btn-primary">
+                                <span>🔍</span> Поиск
+                            </button>
+                        </div>
+
+                        <!-- Список заказных деталей -->
+                        {% for checkbox in form.zakaz_details %}
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input zakaz-details"
+                                   id="{{ checkbox.id_for_label }}"
+                                   name="{{ checkbox.data.name }}"
+                                   value="{{ checkbox.data.value }}"
+                                   {% if checkbox.data.selected %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                            <div class="part-info">
+                                <div class="part-sku">{{ checkbox.choice_label }}</div>
+                                <div class="part-name">Описание детали</div>
+                            </div>
+                            <div class="quantity-control">
+                                <input type="number" class="quantity-input" min="1" value="1" disabled>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="selected-parts">
+                        <div class="selected-parts-header">
+                            <button id="clear-standard" class="btn-outline" style="padding: 8px 15px;">
+                                Очистить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Связаные спецификации</div>
+                        <div id="count-spec" class="stat-value">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Стандартные детали</div>
+                        <div id="count-det" class="stat-value">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Заказные детали</div>
+                        <div id="count-stand" class="stat-value">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Всего позиций</div>
+                        <div id="count-zakaz" class="stat-value">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+
+    <div id="notification" class="notification"></div>
+    <script>
+        async function sendJsonData() {
+            const csrftoken = getCSRFToken(); // Функция из примера выше
+            const data = {
+            EAM: document.getElementById('EamValue'),
+            }
+
+            try {
+                const response = await fetch('/api/submit/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                return await response.json();
+            } catch (error) {
+                console.error('Ошибка:', error);
+            }
+        }
+
+
+
+        function eamWithInput(type) {
+            const specParts = document.getElementById('spec-parts');
+            const detParts = document.getElementById('det-parts');
+            const standDetParts = document.getElementById('stand-det-parts');
+            const zakazDetParts = document.getElementById('zakaz-det-parts');
+
+            // Убираем активный класс со всех кнопок
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Скрываем все вкладки
+            [specParts, detParts, standDetParts, zakazDetParts].forEach(el => {
+                if (el) {
+                    el.classList.add('hidden');
+                    el.classList.remove('active');
+                }
+            });
+
+            // Показываем нужную вкладку
+            if (type === 'specification'){
+                if (specParts) {
+                    specParts.classList.remove('hidden');
+                    specParts.classList.add('active');
+                }
+                document.querySelector('.tab[data-tab="spec-parts"]').classList.add('active');
+            }
+            else if (type === 'detail'){
+                if (detParts) {
+                    detParts.classList.remove('hidden');
+                    detParts.classList.add('active');
+                }
+                document.querySelector('.tab[data-tab="detail-parts"]').classList.add('active');
+            }
+            else if (type === 'standart'){
+                if (standDetParts) {
+                    standDetParts.classList.remove('hidden');
+                    standDetParts.classList.add('active');
+                }
+                document.querySelector('.tab[data-tab="standard-parts"]').classList.add('active');
+            }
+            else if (type === 'zakaz'){
+                if (zakazDetParts) {
+                    zakazDetParts.classList.remove('hidden');
+                    zakazDetParts.classList.add('active');
+                }
+                document.querySelector('.tab[data-tab="custom-parts"]').classList.add('active');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Инициализация всех чекбоксов с полями количества
+            function initializeCheckboxesWithQuantity() {
+                const allCheckboxes = document.querySelectorAll('.form-check-input');
+
+                allCheckboxes.forEach(checkbox => {
+                    // Находим связанное поле ввода количества
+                    const quantityInput = checkbox.closest('.form-check').querySelector('.quantity-input');
+
+                    // Обновляем визуальное состояние при загрузке
+                    updateCheckboxVisualState(checkbox);
+
+                    // Включаем/выключаем поле ввода в зависимости от состояния чекбокса
+                    quantityInput.disabled = !checkbox.checked;
+
+                    // Добавляем обработчик изменений чекбокса
+                    checkbox.addEventListener('change', function() {
+                        updateCheckboxVisualState(this);
+                        quantityInput.disabled = !this.checked;
+
+                        // Если чекбокс снят, сбрасываем количество
+                        if (!this.checked) {
+                            quantityInput.value = 1;
+                        }
+
+                        updateCounters();
+                    });
+
+                    // Добавляем обработчик изменений поля количества
+                    quantityInput.addEventListener('input', function() {
+                        updateCounters();
+                    });
+
+                    // Обработчик клика по всему блоку
+                    const formCheck = checkbox.closest('.form-check');
+                    if (formCheck) {
+                        formCheck.addEventListener('click', function(e) {
+                            // Предотвращаем двойное срабатывание если кликнули на сам чекбокс или поле ввода
+                            if (e.target.type !== 'checkbox' && e.target.type !== 'number') {
+                                checkbox.checked = !checkbox.checked;
+                                checkbox.dispatchEvent(new Event('change'));
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Функция обновления визуального состояния чекбокса
+            function updateCheckboxVisualState(checkbox) {
+                const formCheck = checkbox.closest('.form-check');
+                if (formCheck) {
+                    if (checkbox.checked) {
+                        formCheck.classList.add('selected');
+                    } else {
+                        formCheck.classList.remove('selected');
+                    }
+                }
+            }
+
+            // Функция обновления счетчиков
+            function updateCounters() {
+                const specCount = document.querySelectorAll('.subcategories:checked').length;
+                const detCount = document.querySelectorAll('.details:checked').length;
+                const standCount = document.querySelectorAll('.standart-details:checked').length;
+                const zakazCount = document.querySelectorAll('.zakaz-details:checked').length;
+
+                document.getElementById('count-spec').textContent = specCount;
+                document.getElementById('count-det').textContent = detCount;
+                document.getElementById('count-stand').textContent = standCount;
+                document.getElementById('count-zakaz').textContent = zakazCount;
+
+                console.log('Счетчики обновлены:', {specCount, detCount, standCount, zakazCount});
+            }
+
+            // Функция для получения выбранных элементов с количествами
+            function getSelectedItems() {
+                const selected = {
+                    specifications: [],
+                    details: [],
+                    standart_details: [],
+                    zakaz_details: []
+                };
+
+                // Собираем спецификации
+                document.querySelectorAll('.subcategories:checked').forEach(checkbox => {
+                    const quantityInput = checkbox.closest('.form-check').querySelector('.quantity-input');
+                    selected.specifications.push({
+                        id: checkbox.value,
+                        name: checkbox.closest('.form-check').querySelector('.part-sku').textContent,
+                        quantity: parseInt(quantityInput.value) || 1
+                    });
+                });
+
+                // Собираем детали
+                document.querySelectorAll('.details:checked').forEach(checkbox => {
+                    const quantityInput = checkbox.closest('.form-check').querySelector('.quantity-input');
+                    selected.details.push({
+                        id: checkbox.value,
+                        name: checkbox.closest('.form-check').querySelector('.part-sku').textContent,
+                        quantity: parseInt(quantityInput.value) || 1
+                    });
+                });
+
+                // Собираем стандартные детали
+                document.querySelectorAll('.standart-details:checked').forEach(checkbox => {
+                    const quantityInput = checkbox.closest('.form-check').querySelector('.quantity-input');
+                    selected.standart_details.push({
+                        id: checkbox.value,
+                        name: checkbox.closest('.form-check').querySelector('.part-sku').textContent,
+                        quantity: parseInt(quantityInput.value) || 1
+                    });
+                });
+
+                // Собираем заказные детали
+                document.querySelectorAll('.zakaz-details:checked').forEach(checkbox => {
+                    const quantityInput = checkbox.closest('.form-check').querySelector('.quantity-input');
+                    selected.zakaz_details.push({
+                        id: checkbox.value,
+                        name: checkbox.closest('.form-check').querySelector('.part-sku').textContent,
+                        quantity: parseInt(quantityInput.value) || 1
+                    });
+                });
+
+                return selected;
+            }
+
+            // Кнопка очистки
+            const clearButton = document.getElementById('clear-standard');
+            if (clearButton) {
+                clearButton.addEventListener('click', function() {
+                    const activeTab = document.querySelector('.tab-content.active');
+                    if (activeTab) {
+                        const checkboxes = activeTab.querySelectorAll('.form-check-input:checked');
+                        checkboxes.forEach(checkbox => {
+                            checkbox.checked = false;
+                            updateCheckboxVisualState(checkbox);
+
+                            // Сбрасываем поле количества
+                            const quantityInput = checkbox.closest('.form-check').querySelector('.quantity-input');
+                            quantityInput.disabled = true;
+                            quantityInput.value = 1;
+                        });
+                        updateCounters();
+                    }
+                });
+            }
+
+            // Инициализация при загрузке
+            initializeCheckboxesWithQuantity();
+            updateCounters();
+
+            // Добавляем обработчик для кнопки создания спецификации
+            const createSpecBtn = document.getElementById('create-spec-btn');
+            if (createSpecBtn) {
+                createSpecBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                     if (validateForm()) {
+                        submitForm();
+                    }
+                    const selectedItems = getSelectedItems();
+                    console.log('Создание спецификации с данными:', selectedItems);
+
+                    // Здесь можно добавить логику отправки данных на сервер
+                    // Например:
+                    // fetch('/create-specification/', {
+                    //     method: 'POST',
+                    //     headers: {
+                    //         'Content-Type': 'application/json',
+                    //         'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    //     },
+                    //     body: JSON.stringify(selectedItems)
+                    // })
+
+                    showNotification('Спецификация успешно создана!', 'success');
+                });
+            }
+
+            // Функция показа уведомлений
+            function showNotification(message, type) {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.className = `notification ${type} show`;
+
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+
+            // Остальной код для работы с файлами...
+            const fileUploadArea = document.getElementById('file-upload-area');
+            const fileInput = document.getElementById('file-input');
+            const fileList = document.getElementById('file-list');
+            const uploadButton = document.getElementById('upload-button');
+
+            let files = [];
+
+            // Обработчик клика по области загрузки
+            fileUploadArea.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            // Обработчик выбора файлов через input
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+                fileInput.value = '';
+            });
+
+            // Обработчики для Drag & Drop
+            fileUploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileUploadArea.classList.add('active');
+            });
+
+            fileUploadArea.addEventListener('dragleave', () => {
+                fileUploadArea.classList.remove('active');
+            });
+
+            fileUploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUploadArea.classList.remove('active');
+                handleFiles(e.dataTransfer.files);
+            });
+
+            function handleFiles(newFiles) {
+                if (newFiles.length === 0) return;
+
+                const emptyState = fileList.querySelector('.empty-state');
+                if (emptyState) {
+                    emptyState.remove();
+                }
+
+                Array.from(newFiles).forEach(file => {
+                    if (files.some(f => f.name === file.name && f.size === file.size)) {
+                        return;
+                    }
+
+                    files.push(file);
+                    addFileToList(file);
+                });
+
+                uploadButton.disabled = false;
+            }
+
+            function addFileToList(file) {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+
+                const fileExtension = file.name.split('.').pop().toUpperCase();
+                const fileIcon = getFileIcon(fileExtension);
+
+                fileItem.innerHTML = `
+                    <div class="file-icon">${fileIcon}</div>
+                    <div class="file-info">
+                        <div class="file-name">
+                            ${file.name}
+                            <span class="file-type-badge">${fileExtension}</span>
+                        </div>
+                        <div class="file-size">${formatFileSize(file.size)}</div>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 0%"></div>
+                        </div>
+                        <div class="file-status status-uploading">
+                             <span>⏳</span> Ожидает загрузки
+                        </div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="file-action delete" title="Удалить">🗑️</button>
+                    </div>
+                `;
+
+                fileList.appendChild(fileItem);
+
+                const deleteBtn = fileItem.querySelector('.file-action.delete');
+                deleteBtn.addEventListener('click', () => {
+                    files = files.filter(f => f !== file);
+                    fileItem.remove();
+
+                    if (files.length === 0) {
+                        fileList.innerHTML = '<div class="empty-state">Файлы не добавлены</div>';
+                        uploadButton.disabled = true;
+                    }
+                });
+            }
+
+            function getFileIcon(extension) {
+                const iconMap = {
+                    'PDF': '📕', 'DOC': '📘', 'DOCX': '📘', 'XLS': '📗', 'XLSX': '📗',
+                    'DWG': '📐', 'TXT': '📄', 'ZIP': '📦', 'JPG': '🖼️', 'PNG': '🖼️', 'GIF': '🖼️'
+                };
+                return iconMap[extension] || '📄';
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            uploadButton.addEventListener('click', () => {
+                if (files.length === 0) return;
+
+                const fileItems = fileList.querySelectorAll('.file-item');
+                fileItems.forEach((item, index) => {
+                    const progress = item.querySelector('.progress');
+                    const status = item.querySelector('.file-status');
+
+                    progress.style.width = '0%';
+                    status.innerHTML = '<span>⏳</span> Загружается...';
+                    status.className = 'file-status status-uploading';
+
+                    setTimeout(() => {
+                        let width = 0;
+                        const interval = setInterval(() => {
+                            width += Math.random() * 10;
+                            if (width >= 100) {
+                                width = 100;
+                                clearInterval(interval);
+                                status.innerHTML = '<span>✅</span> Загружено успешно';
+                                status.className = 'file-status status-success';
+                            }
+                            progress.style.width = width + '%';
+                        }, 100);
+                    }, index * 500);
+                });
+
+                uploadButton.disabled = true;
+                uploadButton.textContent = 'Загрузка...';
+
+                setTimeout(() => {
+                    uploadButton.textContent = 'Файлы загружены';
+                    uploadButton.style.background = 'var(--success-color)';
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>

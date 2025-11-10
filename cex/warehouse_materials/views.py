@@ -32,7 +32,6 @@ def warehouse_material(request):
             materials = materials.filter(stamp__type__name=type_form)
 
         if status:
-            print(status)
             match status:
                 case 'no':
                     materials = materials.filter(actual_weight=0)
