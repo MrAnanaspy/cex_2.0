@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'economy',
     'work_planning',
     'branch',
+    'work_tools',
 ]
 
 MIDDLEWARE = [

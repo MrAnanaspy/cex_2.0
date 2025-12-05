@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карточка инструмента</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a3a, #2c3e50);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+        }
+
+        .tool-card {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 600px;
+            max-height: 90vh;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .header-info h1 {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .header-info .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .header-status {
+            text-align: right;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .status-available {
+            background-color: rgba(39, 174, 96, 0.2);
+            color: #27ae60;
+            border: 2px solid #27ae60;
+        }
+
+        .card-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            padding: 0;
+            min-height: 400px;
+        }
+
+        .image-section {
+            flex: 0 0 30%;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #eaeaea;
+            background: #fafafa;
+            overflow-y: auto;
+        }
+
+        .tool-image {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-style: italic;
+            margin-bottom: 20px;
+            border: 2px dashed #d0d0d0;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .image-caption {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 1rem;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .basic-info {
+            margin-top: 15px;
+        }
+
+        .info-item {
+            margin-bottom: 12px;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 3px solid #3498db;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #34495e;
+            font-size: 1.05rem;
+        }
+
+        .parameters-section {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: white;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+            flex-shrink: 0;
+        }
+
+        .parameters-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+            padding-right: 15px;
+            flex: 1;
+        }
+
+        .parameter {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            flex-shrink: 0;
+        }
+
+        .parameter:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background: #f0f7ff;
+        }
+
+        .parameter-name {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.05rem;
+            flex: 1;
+        }
+
+        .parameter-value {
+            color: #34495e;
+            font-weight: 500;
+            text-align: right;
+            font-size: 1.05rem;
+            background: white;
+            padding: 5px 12px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            min-width: 200px;
+            flex-shrink: 0;
+        }
+
+        .card-footer {
+            padding: 20px 40px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .footer-info {
+            color: #7f8c8d;
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(149, 165, 166, 0.3);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Стили для скроллбаров */
+        .parameters-container::-webkit-scrollbar,
+        .image-section::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .parameters-container::-webkit-scrollbar-track,
+        .image-section::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .parameters-container::-webkit-scrollbar-thumb,
+        .image-section::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+
+        .parameters-container::-webkit-scrollbar-thumb:hover,
+        .image-section::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        /* Дополнительные параметры для демонстрации прокрутки */
+        .extra-parameters {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px dashed #e0e0e0;
+        }
+
+        .extra-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="tool-card">
+        <div class="card-header">
+            <div class="header-info">
+                <h1>{{title}}</h1>
+                <div class="subtitle">Полная техническая информация и характеристики</div>
+            </div>
+            <div class="header-status">
+                <div class="status-badge status-available">
+                    ✔️ {{quantity}}
+                </div>
+            </div>
+        </div>
+
+        <div class="card-content">
+            <div class="image-section">
+                <div class="tool-image">
+                    <img src="{{img}}" width="270" height="270">
+                </div>
+                <div class="image-caption">
+                    {{description}}
+                </div>
+
+
+            </div>
+
+            <div class="parameters-section">
+                <div class="section-title">Технические характеристики</div>
+                <div class="parameters-container">
+                    {% for key, value in attributes.items %}
+                    <div class="parameter">
+                        <span class="parameter-name">{{key}}</span>
+                        <span class="parameter-value">{{value}}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <div class="footer-info">
+                Обновлено: 15.11.2023 | ID: FR-12-4Z-TiN-045
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-secondary">Назад к каталогу</button>
+                <button class="btn btn-primary">Заказать инструмент</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание инструмента</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a3a, #2c3e50);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #d0d0d0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #d0d0d0;
+            border-radius: 8px;
+            font-size: 1rem;
+            min-height: 100px;
+            resize: vertical;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-hint {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        .parameters-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .parameter-row {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        .parameter-name {
+            flex: 1;
+        }
+
+        .parameter-value {
+            flex: 2;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #219653;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(149, 165, 166, 0.3);
+        }
+
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .footer {
+            padding: 20px 40px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-info {
+            color: #7f8c8d;
+            font-size: 0.95rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .parse-section {
+            margin-bottom: 20px;
+        }
+
+        .parse-result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            background: #f8f9fa;
+            min-height: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .parameter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Создание нового инструмента</h1>
+            <p>Добавьте информацию о новом инструменте в каталог</p>
+        </div>
+
+        <form method="post" id="milling-form">
+            {% csrf_token %}
+
+            <div class="content">
+                <!-- Основная информация -->
+                <div class="form-section">
+                    <h2 class="section-title">Основная информация</h2>
+
+                    <!-- Название -->
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.name.id_for_label }}">
+                            {{ form.name.label }} *
+                        </label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="alert alert-error">{{ form.name.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Описание -->
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.description.id_for_label }}">
+                            {{ form.description.label }} *
+                        </label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="alert alert-error">{{ form.description.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Фотографии -->
+                <div class="form-section">
+                    <h2 class="section-title">Фотографии инструмента</h2>
+                    <img id="preview" src="{{ form.image_url.value|default:'' }}" height="300"
+                         style="display: {% if form.image_url.value %}block{% else %}none{% endif %}; margin-bottom: 15px; max-width: 100%; border-radius: 8px;">
+
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.image_url.id_for_label }}">
+                            {{ form.image_url.label }}
+                        </label>
+                        {{ form.image_url }}
+                        {% if form.image_url.errors %}
+                            <div class="alert alert-error">{{ form.image_url.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Количество -->
+                <div class="form-section">
+                    <h2 class="section-title">Количество и наличие</h2>
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.quantity.id_for_label }}">
+                            {{ form.quantity.label }}
+                        </label>
+                        {{ form.quantity }}
+                        {% if form.quantity.errors %}
+                            <div class="alert alert-error">{{ form.quantity.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Технические характеристики -->
+                <div class="form-section">
+                    <h2 class="section-title">Технические характеристики</h2>
+
+                    <!-- Скрытое поле для атрибутов -->
+                    {{ form.attributes }}
+
+                    <div class="parameters-container">
+                        <div class="attributes-container" id="attributes-container">
+                            <!-- Сюда будут добавляться parameter-row через JavaScript -->
+                            {% if form.instance.attributes %}
+                                {% for key, value in form.instance.attributes.items %}
+                                <div class="parameter-row">
+                                    <div class="parameter-name">
+                                        <input type="text" class="form-input param-name"
+                                               placeholder="Название параметра" value="{{ key }}">
+                                    </div>
+                                    <div class="parameter-value">
+                                        <input type="text" class="form-input param-value"
+                                               placeholder="Значение параметра" value="{{ value }}">
+                                    </div>
+                                    <button class="btn btn-danger btn-sm remove-param" type="button">
+                                        <span>🗑️</span>
+                                    </button>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <button id="add-param-btn" class="btn btn-primary" type="button">Добавить параметр</button>
+                    </div>
+                </div>
+
+                <!-- Дополнительные поля -->
+                <div class="form-section">
+                    <h2 class="section-title">Дополнительные параметры</h2>
+
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.diameter.id_for_label }}">
+                            {{ form.diameter.label }}
+                        </label>
+                        {{ form.diameter }}
+                        {% if form.diameter.errors %}
+                            <div class="alert alert-error">{{ form.diameter.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.work_diameter.id_for_label }}">
+                            {{ form.work_diameter.label }}
+                        </label>
+                        {{ form.work_diameter }}
+                        {% if form.work_diameter.errors %}
+                            <div class="alert alert-error">{{ form.work_diameter.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.url_market.id_for_label }}">
+                            {{ form.url_market.label }}
+                        </label>
+                        {{ form.url_market }}
+                        {% if form.url_market.errors %}
+                            <div class="alert alert-error">{{ form.url_market.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.plates.id_for_label }}">
+                            {{ form.plates.label }}
+                        </label>
+                        {{ form.plates }}
+                        {% if form.plates.errors %}
+                            <div class="alert alert-error">{{ form.plates.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="footer-info">
+                    * - обязательные поля для заполнения
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-secondary" type="button" id="cancel-btn">Отмена</button>
+                    <button class="btn btn-success" type="submit" id="save-btn">Сохранить инструмент</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Функция обновления скрытого поля attributes
+        function updateAttributesField() {
+            const parameters = {};
+            const parameterRows = document.querySelectorAll('#attributes-container .parameter-row');
+
+            parameterRows.forEach(row => {
+                const keyInput = row.querySelector('.param-name');
+                const valueInput = row.querySelector('.param-value');
+                const key = keyInput.value.trim();
+                const value = valueInput.value.trim();
+
+                if (key && value) {
+                    parameters[key] = value;
+                }
+            });
+
+            // Обновляем скрытое поле
+            document.getElementById('{{ form.attributes.id_for_label }}').value = JSON.stringify(parameters);
+        }
+
+        // Функция добавления строки параметра
+        function addParameterRow(container, key = '', value = '') {
+            const parameterRow = document.createElement('div');
+            parameterRow.className = 'parameter-row';
+
+            parameterRow.innerHTML = `
+                <div class="parameter-name">
+                    <input type="text" class="form-input param-name" placeholder="Название параметра" value="${key}">
+                </div>
+                <div class="parameter-value">
+                    <input type="text" class="form-input param-value" placeholder="Значение параметра" value="${value}">
+                </div>
+                <button class="btn btn-danger btn-sm remove-param" type="button">
+                    <span>🗑️</span>
+                </button>
+            `;
+
+            parameterRow.querySelector('.remove-param').addEventListener('click', function() {
+                parameterRow.remove();
+                updateAttributesField();
+            });
+
+            // Обновляем поле при изменении значений
+            parameterRow.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', updateAttributesField);
+            });
+
+            container.appendChild(parameterRow);
+            updateAttributesField();
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Кнопка добавления параметра
+            document.getElementById('add-param-btn').addEventListener('click', function() {
+                addParameterRow(document.getElementById('attributes-container'));
+            });
+
+            // Инициализация существующих параметров из формы
+            const initialAttributes = {{ form.instance.attributes|default:"{}"|safe }};
+            const container = document.getElementById('attributes-container');
+
+            if (Object.keys(initialAttributes).length > 0) {
+                container.innerHTML = '';
+                Object.entries(initialAttributes).forEach(([key, value]) => {
+                    addParameterRow(container, key, value);
+                });
+            }
+
+            // Обработчик отправки формы
+            document.getElementById('milling-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                updateAttributesField(); // Обновляем атрибуты перед отправкой
+                this.submit();
+            });
+
+            // Автообновление превью изображения
+            document.getElementById('{{ form.image_url.id_for_label }}').addEventListener('input', function() {
+                const preview = document.getElementById('preview');
+                const url = this.value.trim();
+
+                if (url) {
+                    preview.src = url;
+                    preview.style.display = 'block';
+                } else {
+                    preview.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
